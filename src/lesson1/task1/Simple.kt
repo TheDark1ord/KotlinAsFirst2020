@@ -2,8 +2,6 @@
 
 package lesson1.task1
 
-import lesson4.task1.convertToString
-import java.lang.Math.pow
 import kotlin.math.*
 
 // Урок 1: простые функции
