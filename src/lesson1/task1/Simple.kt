@@ -2,6 +2,7 @@
 
 package lesson1.task1
 
+import lesson4.task1.convertToString
 import kotlin.math.*
 
 // Урок 1: простые функции
@@ -141,7 +142,9 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
     var deposit = initial.toDouble()
     val depositMul = 1 + (percent.toDouble() / 100)
 
-    for (i in 0..2) deposit *= depositMul
+    deposit *= depositMul
+    deposit *= depositMul
+    deposit *= depositMul
     return deposit
 }
 
@@ -152,14 +155,7 @@ fun accountInThreeYears(initial: Int, percent: Int): Double {
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int {
-    var initialNumber = number
-    var revNumber = 0
-
-    while (initialNumber > 0) {
-        revNumber *= 10
-        revNumber += initialNumber % 10
-
-        initialNumber /= 10
-    }
-    return revNumber
+    var numString = number.toString()
+    numString = numString.reversed()
+    return numString.toInt()
 }

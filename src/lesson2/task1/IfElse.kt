@@ -3,7 +3,9 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
@@ -68,7 +70,18 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+
+fun ageDescription(age: Int): String {
+    if ((age % 100) in 10..19)
+        return "$age лет"
+
+    return when (age % 10) {
+        1 -> "$age год"
+        2, 3, 4 -> "$age года"
+        0, 5, 6, 7, 8, 9 -> "$age лет"
+        else -> ""
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -81,7 +94,29 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    var halfWay = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    var totalTime = 0.0
+
+    if (t1 * v1 >= halfWay) {
+        totalTime += halfWay / v1
+        return totalTime
+    } else {
+        halfWay -= t1 * v1
+        totalTime += t1
+    }
+
+    if (t2 * v2 >= halfWay) {
+        totalTime += halfWay / v2
+        return totalTime
+    } else {
+        halfWay -= t2 * v2
+        totalTime += t2
+    }
+
+    totalTime += halfWay / v3
+    return totalTime
+}
 
 /**
  * Простая (2 балла)
@@ -132,4 +167,24 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    var diff = 0
+
+    if (a == c) {
+        return min(b - a, d - c)
+    } else if (a < c) {
+        // Если отрезок CD находится внутри отрезка AB возвращается длина отрезка CD
+        if (d < b)
+            return d - c
+        diff = c - b
+    } else {
+        // Если отрезок AB находится внутри отрезка CD возвращается длина отрезка AB
+        if (b < d)
+            return b - a
+        diff = a - d
+    }
+
+    if (diff <= 0)
+        return abs(diff)
+    return -1
+}
