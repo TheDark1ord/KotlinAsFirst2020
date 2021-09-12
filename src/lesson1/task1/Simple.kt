@@ -3,6 +3,7 @@
 package lesson1.task1
 
 import lesson4.task1.convertToString
+import java.lang.Math.pow
 import kotlin.math.*
 
 // Урок 1: простые функции
@@ -139,13 +140,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double {
-    var deposit = initial.toDouble()
-    val depositMul = 1 + (percent.toDouble() / 100)
-
-    deposit *= depositMul
-    deposit *= depositMul
-    deposit *= depositMul
-    return deposit
+    return (initial.toDouble()) * (1 + percent / 100.0).pow(3)
 }
 
 /**
