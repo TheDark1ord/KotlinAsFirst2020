@@ -143,11 +143,23 @@ fun whichRookThreatens(
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
+
 fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int {
+    var dangerLevel = 0
+
+    // Check for rook
+    if (rookX == kingX || rookY == kingY)
+        dangerLevel += 1
+
+    if ((kingX - kingY) == (bishopX - bishopY) || ((8 - kingX) - kingY) == ((8 - bishopX) - bishopY))
+        dangerLevel += 2
+
+    return dangerLevel
+}
 
 /**
  * Простая (2 балла)
