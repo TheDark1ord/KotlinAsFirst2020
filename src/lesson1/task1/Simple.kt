@@ -118,11 +118,11 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  */
 
 
- //fun accountInThreeYears(initial: Int, percent: Int): Doble {
+ fun accountInThreeYears(initial: Int, percent: Int): Int = TODO()
 
-  //  return 3.pow(initial * (1 + percent / 100))
 
-}
+
+
 
 
 /**
