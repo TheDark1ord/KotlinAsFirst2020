@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -120,14 +121,31 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var abs = 0.0
+    for (i in v.indices)
+        abs += v[i].pow(2)
+    abs = sqrt(abs)
+
+    return abs
+}
 
 /**
  * Простая (2 балла)
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    if (list.isEmpty())
+        return 0.0
+
+    var avg = 0.0
+    for (i in list.indices)
+        avg += list[i]
+    avg /= list.size
+
+    return avg
+}
 
 /**
  * Средняя (3 балла)
@@ -250,4 +268,94 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    if (n == 0)
+        return "ноль"
+
+    var numberStr = ""
+
+    val digit = IntArray(6)
+    for (i in 5 downTo 0) {
+        digit[i] = (n / 10.0.pow(i)).toInt() % 10
+    }
+
+    // Тысячи
+    if (n / 1000 > 0) {
+        if (n / 10000 == 0) {
+            numberStr += when (digit[3]) {
+                1 -> "тысяча"
+                2 -> "две тысячи "
+                3 -> "три тысячи "
+                4 -> "четыре тысячи "
+                else -> russian(n / 1000) + " тысяч "
+            }
+        } else if (digit[3] in 1..4) {
+            numberStr += russian((n / 1000) - digit[3]) + " "
+
+            numberStr += when (digit[3]) {
+                1 -> "одна тысяча "
+                2 -> "две тысячи "
+                3 -> "три тысячи "
+                4 -> "четыре тысячи "
+                else -> " "
+            }
+        } else {
+            numberStr += russian(n / 1000) + " тысяч "
+        }
+    }
+
+    // Сотни
+    numberStr += when (digit[2]) {
+        0 -> ""
+        1 -> "сто "
+        2 -> "двести "
+        3 -> "триста "
+        4 -> "четыре сто "
+        else -> russian(digit[2]) + "сот "
+    }
+
+    // Десятки
+    if (digit[1] == 1) {
+        numberStr += when (n % 100) {
+            10 -> "десять"
+            11 -> "одиннадцать"
+            12 -> "двенадцать"
+            13 -> "тринадцать"
+            14 -> "четырнадцать"
+            15 -> "пятнадцать"
+            16 -> "шестнадцать"
+            17 -> "семнадцать"
+            18 -> "восемнадцать"
+            19 -> "девятнадцать"
+            else -> ""
+        }
+        return numberStr
+    }
+    numberStr += when (digit[1]) {
+        0 -> ""
+        2 -> "двадцать "
+        3 -> "тридцать "
+        4 -> "сорок "
+        9 -> "девяносто "
+        else -> russian(digit[1]) + "десят "
+    }
+
+    // Единицы
+    numberStr += when (digit[0]) {
+        0 -> ""
+        1 -> "один"
+        2 -> "два"
+        3 -> "три"
+        4 -> "четыре"
+        5 -> "пять"
+        6 -> "шесть"
+        7 -> "семь"
+        8 -> "восемь"
+        9 -> "девять"
+        else -> ""
+    }
+
+    if (numberStr.endsWith(" "))
+        return numberStr.dropLast(1)
+    return numberStr
+}

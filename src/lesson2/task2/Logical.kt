@@ -79,9 +79,7 @@ fun circleInside(
 ): Boolean {
     val distToCenter = sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
 
-    if (distToCenter + r1 <= r2)
-        return true
-    return false
+    return distToCenter + r1 <= r2
 }
 
 /**
