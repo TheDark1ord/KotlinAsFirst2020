@@ -11,6 +11,10 @@ import kotlin.math.sqrt
 // Рекомендуемое количество баллов = 8
 // Вместе с предыдущими уроками = 24/33
 
+fun main() {
+    print(russian(314000))
+}
+
 /**
  * Пример
  *
@@ -155,7 +159,17 @@ fun mean(list: List<Double>): Double {
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    var avg = 0.0
+    for (i in list.indices)
+        avg += list[i]
+    avg /= list.size
+
+    for (i in list.indices)
+        list[i] -= avg
+
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -281,26 +295,22 @@ fun russian(n: Int): String {
 
     // Тысячи
     if (n / 1000 > 0) {
-        if (n / 10000 == 0) {
-            numberStr += when (digit[3]) {
-                1 -> "тысяча"
-                2 -> "две тысячи "
-                3 -> "три тысячи "
-                4 -> "четыре тысячи "
-                else -> russian(n / 1000) + " тысяч "
-            }
-        } else if (digit[3] in 1..4) {
-            numberStr += russian((n / 1000) - digit[3]) + " "
+        if (digit[3] in 1..2 && digit[4] != 1) {
+            numberStr += russian(n / 1000 - digit[3])
+            if (numberStr == "ноль") numberStr = ""
 
-            numberStr += when (digit[3]) {
-                1 -> "одна тысяча "
-                2 -> "две тысячи "
-                3 -> "три тысячи "
-                4 -> "четыре тысячи "
-                else -> " "
-            }
+            if (digit[3] == 1) numberStr += " одна тысяча "
+            else numberStr += " две тысячи "
         } else {
-            numberStr += russian(n / 1000) + " тысяч "
+            numberStr += russian(n / 1000)
+            if (numberStr == "ноль") numberStr = ""
+
+            if (digit[4] == 1)
+                numberStr += " тысяч "
+            else if (digit[3] in 3..4)
+                numberStr += " тысячи "
+            else
+                numberStr += " тысяч "
         }
     }
 
@@ -310,26 +320,22 @@ fun russian(n: Int): String {
         1 -> "сто "
         2 -> "двести "
         3 -> "триста "
-        4 -> "четыре сто "
+        4 -> "четыресто "
         else -> russian(digit[2]) + "сот "
     }
 
     // Десятки
     if (digit[1] == 1) {
-        numberStr += when (n % 100) {
-            10 -> "десять"
-            11 -> "одиннадцать"
-            12 -> "двенадцать"
-            13 -> "тринадцать"
-            14 -> "четырнадцать"
-            15 -> "пятнадцать"
-            16 -> "шестнадцать"
-            17 -> "семнадцать"
-            18 -> "восемнадцать"
-            19 -> "девятнадцать"
-            else -> ""
-        }
-        return numberStr
+        if (n % 100 == 10)
+            return numberStr + "десять"
+        if (n % 100 == 12)
+            return numberStr + "двенадцать"
+
+        numberStr += russian(digit[0])
+        if (numberStr.endsWith("ь"))
+            numberStr = numberStr.dropLast(1)
+        return numberStr + "надцать"
+
     }
     numberStr += when (digit[1]) {
         0 -> ""
@@ -341,21 +347,22 @@ fun russian(n: Int): String {
     }
 
     // Единицы
-    numberStr += when (digit[0]) {
-        0 -> ""
-        1 -> "один"
-        2 -> "два"
-        3 -> "три"
-        4 -> "четыре"
-        5 -> "пять"
-        6 -> "шесть"
-        7 -> "семь"
-        8 -> "восемь"
-        9 -> "девять"
-        else -> ""
-    }
+    val russianDigits = mapOf<Int, String>(
+        1 to "один",
+        2 to "два",
+        3 to "три",
+        4 to "четыре",
+        5 to "пять",
+        6 to "шесть",
+        7 to "семь",
+        8 to "восемь",
+        9 to "девять"
+    )
+    if (digit[0] == 0)
+        numberStr = numberStr.dropLast(1)
+    else
+        numberStr += russianDigits[digit[0]]
 
-    if (numberStr.endsWith(" "))
-        return numberStr.dropLast(1)
+    numberStr = numberStr.trim()
     return numberStr
 }

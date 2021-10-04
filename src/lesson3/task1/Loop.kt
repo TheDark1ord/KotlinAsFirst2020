@@ -224,10 +224,10 @@ fun hasDifferentDigits(n: Int): Boolean {
 
     while (n2 > 0) {
         if ((n2 % 10) != firstDigit)
-            return false
+            return true
         n2 /= 10
     }
-    return true
+    return false
 }
 
 /**
@@ -240,18 +240,22 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    val N = 7
     val pi = 3.1415926535897
 
     val normX = abs(x) % pi
 
-    // According to my calculations, 7 iterations of the Taylor Series
-    // can approximate the value of sin(x) in the (-pi, pi) range
-    // with the precision of up to 1e-6
     var taylorSum = 0.0
-    for (n in 0..N)
-        taylorSum += ((-1.0).pow(n) * normX.pow(2 * n + 1)) / factorial(2 * n + 1)
+    var lastTerm: Double
 
+    var n = 0
+    while (true) {
+        lastTerm = ((-1.0).pow(n) * normX.pow(2 * n + 1)) / factorial(2 * n + 1)
+        taylorSum += lastTerm
+
+        if (abs(lastTerm) < eps)
+            break
+        n++
+    }
     if ((abs(x) % 2 * pi - pi) < 0)
         return -taylorSum
     return taylorSum
@@ -267,7 +271,6 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    val N = 8
     val pi = 3.1415926535897
 
     val normX: Double
@@ -277,8 +280,17 @@ fun cos(x: Double, eps: Double): Double {
         normX = (abs(x) - pi) % (2 * pi) - pi
 
     var taylorSum = 0.0
-    for (n in 0..N)
-        taylorSum += ((-1.0).pow(n) * normX.pow(2 * n)) / factorial(2 * n)
+    var lastTerm: Double
+
+    var n = 0
+    while (true) {
+        lastTerm = ((-1.0).pow(n) * normX.pow(2 * n)) / factorial(2 * n)
+        taylorSum += lastTerm
+
+        if (abs(lastTerm) < eps)
+            break
+        n++
+    }
 
     return taylorSum
 }
@@ -312,7 +324,6 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Найти n-ю цифру последовательности из чисел Фибоначчи (см. функцию fib выше):
  * 1123581321345589144..
- * я люблю мальчиков
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  *
  * Использовать операции со строками в этой задаче запрещается.
