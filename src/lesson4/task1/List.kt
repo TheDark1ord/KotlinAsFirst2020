@@ -3,8 +3,10 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.math.max
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -273,7 +275,42 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+val romanSymbols = arrayOf(
+    "I",
+    "V",
+    "X",
+    "L",
+    "C",
+    "D",
+    "M",
+)
+
+fun pow(n: Int, power: Int): Int = n.toDouble().pow(power).toInt()
+
+fun roman(n: Int): String {
+    var n2 = n
+    var romanStr = ""
+
+    if (n2 >= 1000) {
+        romanStr += "M".repeat(n2 / 1000)
+        n2 %= 1000
+    }
+
+    val magnitude = max(0, log10(n2.toDouble()).toInt())
+    val msd = n2 / pow(10, magnitude) // Most Significant Digit
+    romanStr += when (msd) {
+        in 1..3 -> romanSymbols[0 + magnitude * 2].repeat(msd)
+        in 6..8 -> romanSymbols[1 + magnitude * 2] + romanSymbols[0 + magnitude * 2].repeat(msd - 5)
+        4       -> romanSymbols[0 + magnitude * 2] + romanSymbols[1 + magnitude * 2]
+        5       -> romanSymbols[1 + magnitude * 2]
+        9       -> romanSymbols[0 + magnitude * 2] + romanSymbols[2 + magnitude * 2]
+        else -> ""
+    }
+    if (magnitude > 0)
+        romanStr + roman(n2 % pow(10, magnitude))
+
+    return romanStr
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -282,6 +319,18 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
+val russianDigits = arrayOf<String>(
+    "один",
+    "два",
+    "три",
+    "четыре",
+    "пять",
+    "шесть",
+    "семь",
+    "восемь",
+    "девять"
+)
+
 fun russian(n: Int): String {
     if (n == 0)
         return "ноль"
@@ -320,8 +369,8 @@ fun russian(n: Int): String {
         1 -> "сто "
         2 -> "двести "
         3 -> "триста "
-        4 -> "четыресто "
-        else -> russian(digit[2]) + "сот "
+        4 -> "четыреста "
+        else -> russianDigits[digit[2]] + "сот "
     }
 
     // Десятки
@@ -331,7 +380,7 @@ fun russian(n: Int): String {
         if (n % 100 == 12)
             return numberStr + "двенадцать"
 
-        numberStr += russian(digit[0])
+        numberStr += russianDigits[digit[0]]
         if (numberStr.endsWith("ь"))
             numberStr = numberStr.dropLast(1)
         return numberStr + "надцать"
@@ -343,21 +392,10 @@ fun russian(n: Int): String {
         3 -> "тридцать "
         4 -> "сорок "
         9 -> "девяносто "
-        else -> russian(digit[1]) + "десят "
+        else -> russianDigits[digit[1]] + "десят "
     }
 
     // Единицы
-    val russianDigits = mapOf<Int, String>(
-        1 to "один",
-        2 to "два",
-        3 to "три",
-        4 to "четыре",
-        5 to "пять",
-        6 to "шесть",
-        7 to "семь",
-        8 to "восемь",
-        9 to "девять"
-    )
     if (digit[0] == 0)
         numberStr = numberStr.dropLast(1)
     else
