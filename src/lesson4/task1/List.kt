@@ -17,6 +17,8 @@ fun main() {
     print(russian(314000))
 }
 
+fun pow(n: Int, power: Int): Int = n.toDouble().pow(power).toInt()
+
 /**
  * Пример
  *
@@ -180,7 +182,12 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    var c = 0
+    for (i in a.indices)
+        c += a[i] * b[i]
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -190,7 +197,12 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var px = 0
+    for (i in p.indices)
+        px += p[i] * pow(x, i)
+    return px
+}
 
 /**
  * Средняя (3 балла)
@@ -202,7 +214,14 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    var sum = 0
+    for (i in list.indices) {
+        sum += list[i]
+        list[i] = sum
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -275,6 +294,12 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+operator fun String.times(other: Int): String {
+    if (other == 0)
+        return ""
+    else return this.repeat(other)
+}
+
 val romanSymbols = arrayOf(
     "I",
     "V",
@@ -285,29 +310,26 @@ val romanSymbols = arrayOf(
     "M",
 )
 
-fun pow(n: Int, power: Int): Int = n.toDouble().pow(power).toInt()
-
 fun roman(n: Int): String {
     var n2 = n
     var romanStr = ""
 
-    if (n2 >= 1000) {
-        romanStr += "M".repeat(n2 / 1000)
-        n2 %= 1000
-    }
+    romanStr += "M" * (n2 / 1000)
+    n2 %= 1000
 
-    val magnitude = max(0, log10(n2.toDouble()).toInt())
-    val msd = n2 / pow(10, magnitude) // Most Significant Digit
-    romanStr += when (msd) {
-        in 1..3 -> romanSymbols[0 + magnitude * 2].repeat(msd)
-        in 6..8 -> romanSymbols[1 + magnitude * 2] + romanSymbols[0 + magnitude * 2].repeat(msd - 5)
-        4       -> romanSymbols[0 + magnitude * 2] + romanSymbols[1 + magnitude * 2]
-        5       -> romanSymbols[1 + magnitude * 2]
-        9       -> romanSymbols[0 + magnitude * 2] + romanSymbols[2 + magnitude * 2]
-        else -> ""
-    }
-    if (magnitude > 0)
-        romanStr + roman(n2 % pow(10, magnitude))
+    var magnitude = max(0, log10(n2.toDouble()).toInt())
+    do {
+        val msd = n2 / pow(10, magnitude) // Most Significant Digit
+        n2 %= pow(10, magnitude)
+
+        romanStr += when (msd) {
+            in 1..3 -> romanSymbols[0 + magnitude * 2] * msd
+            in 5..8 -> romanSymbols[1 + magnitude * 2] + romanSymbols[0 + magnitude * 2] * (msd - 5)
+            4 -> romanSymbols[0 + magnitude * 2] + romanSymbols[1 + magnitude * 2]
+            9 -> romanSymbols[0 + magnitude * 2] + romanSymbols[2 + magnitude * 2]
+            else -> ""
+        }
+    } while (magnitude-- > 0)
 
     return romanStr
 }
@@ -319,7 +341,8 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-val russianDigits = arrayOf<String>(
+val russianDigits = arrayOf(
+    "",
     "один",
     "два",
     "три",
