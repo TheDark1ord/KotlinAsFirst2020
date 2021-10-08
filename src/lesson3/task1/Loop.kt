@@ -11,6 +11,10 @@ import kotlin.math.pow
 // Рекомендуемое количество баллов = 7
 // Вместе с предыдущими уроками = 16/21
 
+fun main() {
+    print(digitNumber(-1))
+}
+
 /**
  * Пример
  *
@@ -76,7 +80,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  */
 fun digitNumber(n: Int): Int {
     var inc = 0
-    var n2 = n
+    var n2 = abs(n)
 
     if (n2 == 0)
         return 1
@@ -256,7 +260,7 @@ fun sin(x: Double, eps: Double): Double {
             break
         n++
     }
-    if ((abs(x) % 2 * pi - pi) < 0)
+    if ((abs(x) % (2 * pi) - pi) < 0)
         return -taylorSum
     return taylorSum
 }

@@ -14,7 +14,7 @@ import kotlin.math.max
 // Вместе с предыдущими уроками = 24/33
 
 fun main() {
-    print(russian(314000))
+    print(roman(16))
 }
 
 fun pow(n: Int, power: Int): Int = n.toDouble().pow(power).toInt()
