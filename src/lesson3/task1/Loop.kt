@@ -12,7 +12,7 @@ import kotlin.math.pow
 // Вместе с предыдущими уроками = 16/21
 
 fun main() {
-    print(digitNumber(-1))
+    print(sin(15.097098029750951, 1e-10))
 }
 
 /**
@@ -246,7 +246,10 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun sin(x: Double, eps: Double): Double {
     val pi = 3.1415926535897
 
-    val normX = abs(x) % pi
+    val normX = if (abs(x) <= pi)
+        x
+    else
+        (abs(x) - pi) % (2 * pi) - pi
 
     var taylorSum = 0.0
     var lastTerm: Double
@@ -260,8 +263,6 @@ fun sin(x: Double, eps: Double): Double {
             break
         n++
     }
-    if ((abs(x) % (2 * pi) - pi) < 0)
-        return -taylorSum
     return taylorSum
 }
 

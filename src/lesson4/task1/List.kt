@@ -402,6 +402,8 @@ fun russian(n: Int): String {
             return numberStr + "десять"
         if (n % 100 == 12)
             return numberStr + "двенадцать"
+        if (n % 100 == 14)
+            return numberStr + "четырнадцать"
 
         numberStr += russianDigits[digit[0]]
         if (numberStr.endsWith("ь"))
