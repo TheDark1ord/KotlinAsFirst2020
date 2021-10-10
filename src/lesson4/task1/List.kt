@@ -146,7 +146,15 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    var c = 0
+    var ch = 0
+    while (ch <= a.size - 1) {
+        c += a[ch] * b[ch]
+        ch += 1
+    }
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -156,7 +164,17 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var px = 0
+    var ch = 0
+    var vx = 1
+    while (ch <= p.size - 1) {
+        px += p[ch] * vx
+        vx *= x
+        ch += 1
+    }
+    return px
+}
 
 /**
  * Средняя (3 балла)
@@ -186,7 +204,23 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+
+    var c = 2
+    val ch = n
+    var str = "";
+    while (c < 10) {
+        if (n % c == 0) {
+            while (ch % c == 0) {
+                str = "$str$c*";
+                ch / c
+            }
+            c += 1;
+        }
+
+    }
+    return str.dropLast(1)
+}
 
 /**
  * Средняя (3 балла)
