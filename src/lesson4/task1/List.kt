@@ -3,10 +3,9 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.log10
-import kotlin.math.pow
-import kotlin.math.sqrt
-import kotlin.math.max
+import lesson3.task1.digitCountInNumber
+import java.lang.StringBuilder
+import kotlin.math.*
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -230,7 +229,29 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    val sqrtn = ceil(sqrt(n.toDouble())).toInt() + 1
+    val notAPrime = BooleanArray(sqrtn + 1) { false }
+    val mulList = mutableListOf<Int>()
+
+    var n1 = n
+    for (i in 2..sqrtn) {
+        if (notAPrime[i])
+            continue
+
+        while (n1 % i == 0) {
+            mulList.add(i)
+            n1 /= i
+        }
+        for (j in (i * 2)..sqrtn step i)
+            notAPrime[j] = true
+    }
+    // Только один простой делитель может быть больше sqrt(n)
+    if (n1 != 1)
+        mulList.add(n1)
+
+    return mulList
+}
 
 /**
  * Сложная (4 балла)
@@ -239,7 +260,30 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    val sqrtn = ceil(sqrt(n.toDouble())).toInt() + 1
+    val notAPrime = BooleanArray(sqrtn + 1) { false }
+    val mulList = StringBuilder()
+
+    var n1 = n
+    for (i in 2..sqrtn) {
+        if (notAPrime[i])
+            continue
+
+        while (n1 % i == 0) {
+            mulList.append("*$i")
+            n1 /= i
+        }
+        for (j in (i * 2)..sqrtn step i)
+            notAPrime[j] = true
+    }
+    // Только один простой делитель может быть больше sqrt(n)
+    if (n1 != 1)
+        mulList.append("*$n1")
+
+    mulList.deleteAt(0)
+    return mulList.toString()
+}
 
 /**
  * Средняя (3 балла)
@@ -294,11 +338,7 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-operator fun String.times(other: Int): String {
-    if (other == 0)
-        return ""
-    else return this.repeat(other)
-}
+operator fun String.times(other: Int): String = this.repeat(other)
 
 val romanSymbols = arrayOf(
     "I",

@@ -5,6 +5,8 @@ package lesson3.task1
 import kotlin.math.sqrt
 import kotlin.math.abs
 import kotlin.math.pow
+import kotlin.math.PI
+import kotlin.math.sin
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -12,7 +14,18 @@ import kotlin.math.pow
 // Вместе с предыдущими уроками = 16/21
 
 fun main() {
-    print(sin(15.097098029750951, 1e-10))
+    var x = -100 * PI
+
+    var sx = 0.0
+    var sxc = 0.0
+    while (x < 100 * PI) {
+        sx = sin(x)
+        sxc = sin(x, 1e-5)
+        if (abs(sx - sxc) > 1e-4)
+            print("x: $x, sin: $sx, my sin: $sxc")
+
+        x += 0.001
+    }
 }
 
 /**
@@ -244,12 +257,10 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    val pi = 3.1415926535897
-
-    val normX = if (abs(x) <= pi)
-        x
+    val normX = if (x > 0)
+        (abs(x) - PI) % (2 * PI) - PI
     else
-        (abs(x) - pi) % (2 * pi) - pi
+        (abs(x) - PI) % (2 * PI)
 
     var taylorSum = 0.0
     var lastTerm: Double
@@ -276,13 +287,7 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    val pi = 3.1415926535897
-
-    val normX: Double
-    if (abs(x) <= pi)
-        normX = x
-    else
-        normX = (abs(x) - pi) % (2 * pi) - pi
+    val normX = (abs(x) - PI) % (2 * PI)
 
     var taylorSum = 0.0
     var lastTerm: Double
@@ -297,7 +302,7 @@ fun cos(x: Double, eps: Double): Double {
         n++
     }
 
-    return taylorSum
+    return -taylorSum
 }
 
 /**
@@ -315,7 +320,7 @@ fun squareSequenceDigit(n: Int): Int {
 
     var it = 1.0
     while (totalDigitCount < n) {
-        lastNum = it.pow(2).toInt()
+        lastNum = (it * it).toInt()
         totalDigitCount += digitNumber(lastNum)
         it++
     }
@@ -337,9 +342,9 @@ fun fibSequenceDigit(n: Int): Int {
     var totalDigitCount = 0
     var lastNum = 0
 
-    var it = 1.0
+    var it = 1
     while (totalDigitCount < n) {
-        lastNum = fib(it.toInt())
+        lastNum = fib(it)
         totalDigitCount += digitNumber(lastNum)
         it++
     }
