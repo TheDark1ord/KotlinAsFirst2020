@@ -16,13 +16,9 @@ import kotlin.math.sin
 fun main() {
     var x = -100 * PI
 
-    var sx = 0.0
-    var sxc = 0.0
     while (x < 100 * PI) {
-        sx = sin(x)
-        sxc = sin(x, 1e-5)
-        if (abs(sx - sxc) > 1e-4)
-            print("x: $x, sin: $sx, my sin: $sxc")
+        if (abs(sin(x) - sin(x, 1e-5)) > 1e-4)
+            print("x: $x, sin: ${sin(x)}, my sin: ${sin(x, 1e-5)}")
 
         x += 0.001
     }
@@ -173,7 +169,7 @@ fun lcm(m: Int, n: Int): Int {
         else
             n2 %= m2
 
-    return (m * n) / (m2 + n2)
+    return (m * n) / (m2 + n2)  
 }
 
 /**

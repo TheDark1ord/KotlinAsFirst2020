@@ -316,6 +316,10 @@ class Tests {
             Pair(-1, -1),
             findSumOfTwo(listOf(1, 2, 3), 6)
         )
+        assertEquals(
+            Pair(-1, -1),
+            findSumOfTwo(listOf(5, 6, 7), 2)
+        )
     }
 
     @Test
@@ -333,6 +337,14 @@ class Tests {
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
                 450
+            )
+        )
+
+        assertEquals(
+            setOf("Часы", "Телефон"),
+            bagPacking(
+                mapOf("Часы" to (7 to 800), "Телефон" to (9 to 400), "Ноутбук" to (12 to 1150)),
+                16
             )
         )
     }
