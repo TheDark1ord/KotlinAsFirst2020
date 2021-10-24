@@ -338,23 +338,16 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-operator fun String.times(other: Int): String = this.repeat(other)
+operator fun Char.times(other: Int): String = this.toString().repeat(other)
+operator fun Char.plus(other: Char): String = this.toString() + other.toString()
 
-val romanSymbols = arrayOf(
-    "I",
-    "V",
-    "X",
-    "L",
-    "C",
-    "D",
-    "M",
-)
+const val romanSymbols = "IVXLCDM"
 
 fun roman(n: Int): String {
     var n2 = n
     var romanStr = ""
 
-    romanStr += "M" * (n2 / 1000)
+    romanStr += 'M' * (n2 / 1000)
     n2 %= 1000
 
     var magnitude = max(0, log10(n2.toDouble()).toInt())
