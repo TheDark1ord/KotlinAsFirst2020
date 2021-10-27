@@ -422,9 +422,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     var it = 1
     for ((first, second) in treasures.values) {
         for (w in 0..capacity) {
-            if (w < first) {
+            if (w < first)
                 values[it][w] = values[it - 1][w]
-            } else {
+            else {
                 if ((second + values[it - 1][w - first]) > values[it - 1][w]) {
                     values[it][w] = second + values[it - 1][w - first]
 
