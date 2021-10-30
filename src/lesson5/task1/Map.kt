@@ -156,7 +156,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
-    mutableListOf<String>().apply { this.addAll(a.filter { b.contains(it) }) }
+    mutableSetOf<String>().apply { this.addAll(a.filter { b.contains(it) }) }.toList()
 
 /**
  * Средняя (3 балла)
@@ -369,7 +369,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         if (list[i] <= number)
             sortedList.add(Pair(list[i], i))
 
-    if (sortedList.isEmpty())
+    if (sortedList.size < 2)
         return Pair(-1, -1)
     sortedList.sortBy { it.first }
 
@@ -415,32 +415,34 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
+
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val values = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
-    val picks = Array(capacity + 1) { Array(treasures.size) { false } }
 
     var it = 1
     for ((first, second) in treasures.values) {
         for (w in 0..capacity) {
-            if (w < first)
-                values[it][w] = values[it - 1][w]
-            else {
-                if ((second + values[it - 1][w - first]) > values[it - 1][w]) {
-                    values[it][w] = second + values[it - 1][w - first]
-
-                    picks[w] = picks[w - first].clone()
-                    picks[w][it - 1] = true
-                } else values[it][w] = values[it - 1][w]
-            }
+            if (w >= first && (second + values[it - 1][w - first]) > values[it - 1][w])
+                values[it][w] = second + values[it - 1][w - first]
+            else values[it][w] = values[it - 1][w]
         }
         it++
     }
 
+
+    // Get picked treasures
+    val treasureList = treasures.toList()
     val pickedTreasures = mutableSetOf<String>()
-    it = 0
-    for ((key) in treasures) {
-        if (picks[capacity][it++])
-            pickedTreasures.add(key)
+    it--
+    var w = capacity
+
+    while (it != 0 && w != 0) {
+        if (values[it][w] != values[it - 1][w]) {
+            // Current treasure was picked
+            pickedTreasures.add(treasureList[it - 1].first)
+            w -= treasureList[it - 1].second.first
+        }
+        it--
     }
     return pickedTreasures
 }

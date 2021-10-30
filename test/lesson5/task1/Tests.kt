@@ -155,6 +155,10 @@ class Tests {
             emptyList<String>(),
             whoAreInBoth(listOf("Marat", "Mikhail"), listOf("Sveta", "Kirill"))
         )
+        assertEquals(
+            listOf("Марат"),
+            whoAreInBoth(listOf("Марат", "Семён", "Марат"), listOf("Марат", "Марат"))
+        )
     }
 
     @Test
@@ -345,6 +349,14 @@ class Tests {
             bagPacking(
                 mapOf("Часы" to (7 to 800), "Телефон" to (9 to 400), "Ноутбук" to (12 to 1150)),
                 16
+            )
+        )
+
+        assertEquals(
+            setOf("1", "0"),
+            bagPacking(
+                mapOf("0" to (1 to 1), "1" to (1 to 2)),
+                2
             )
         )
     }
