@@ -82,15 +82,13 @@ fun digitNumber(n: Int): Int = TODO()
  */
 fun fib(n: Int): Int {
 
-    return if (n == 1 || n == 2) {
-        1
-    } else {
+    return if (n == 1 || n == 2) 1 else {
         val fib = IntArray(n + 2)
         fib[0] = 0
         fib[1] = 1
         var chek = 2
         while (chek < n + 1) {
-            fib[chek] = fib[chek - 1] + fib[chek - 2]
+            (fib[chek - 1] + fib[chek - 2]).also { fib[chek] = it }
             chek += 1
         }
         fib[chek - 1]

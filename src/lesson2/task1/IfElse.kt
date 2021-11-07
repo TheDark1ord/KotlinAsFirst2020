@@ -70,23 +70,15 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     val text: String = age.toString()
-    if (age in 10..20) {
-        return "$text лет"
-    } else {
-        return if (age in 100..120) {
-            "$text лет"
-        } else {
-            if (age % 10 == 1) {
-                "$text год"
-            } else {
-                if (age % 10 == 5 || age % 10 == 6 || age % 10 == 7 || age % 10 == 8 || age % 10 == 9 || age % 10 == 0){
-                    "$text лет"
-                } else {
-                    "$text года"
-                }
-            }
-        }
-    }
+    return if (age in 10..20) {
+        "$text лет"
+    } else if (age in 100..120) {
+        "$text лет"
+    } else if (age % 10 == 1) {
+        "$text год"
+    } else if (age % 10 == 5 || age % 10 == 6 || age % 10 == 7 || age % 10 == 8 || age % 10 == 9 || age % 10 == 0){
+        "$text лет"
+    } else "$text года"
 }
 
 /**
