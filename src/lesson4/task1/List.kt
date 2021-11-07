@@ -350,7 +350,6 @@ fun russian(n: Int): String {
         k %= 100
     }
     if (k in 11..19) {
-        str = str.dropLast(6)
         if (k == 19) str += "девятнадцать "
         if (k == 18) str += "восемнадцать "
         if (k == 17) str += "семнадцать "
