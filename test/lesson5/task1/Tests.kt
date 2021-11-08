@@ -3,6 +3,8 @@ package lesson5.task1
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import java.lang.IndexOutOfBoundsException
+import kotlin.random.Random
 
 class Tests {
     @Test
@@ -231,6 +233,9 @@ class Tests {
                 "печенье"
             )
         )
+        assertNull(
+            findCheapestStuff(mapOf<String, Pair<String, Double>>(), "")
+        )
     }
 
     @Test
@@ -324,6 +329,24 @@ class Tests {
             Pair(-1, -1),
             findSumOfTwo(listOf(5, 6, 7), 2)
         )
+
+        assertEquals(
+            Pair(0, 2),
+            findSumOfTwo(listOf(41, 15, 48, 81, 19, 90, 85, 75, 93, 71), 89)
+        )
+
+        for (i in 0..100) {
+            val list = List(10) { Random.nextInt(0, 100) }
+            val number = Random.nextInt(0, 200)
+            try {
+                findSumOfTwo(list, number)
+            } catch (e: IndexOutOfBoundsException) {
+                println(list)
+                println(number)
+                throw e
+            }
+        }
+
     }
 
     @Test

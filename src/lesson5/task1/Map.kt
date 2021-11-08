@@ -156,7 +156,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> =
-    mutableSetOf<String>().apply { this.addAll(a.filter { b.contains(it) }) }.toList()
+    mutableListOf<String>().apply { this.addAll(a.filter { b.contains(it) }.distinct()) }
 
 /**
  * Средняя (3 балла)
@@ -201,8 +201,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val avgPrice = mutableMapOf<String, Double>().apply {
         stockPrices.forEach {
-            if (this[it.first] == null) this[it.first] = it.second
-            else this[it.first] = this[it.first]!!.plus(it.second)
+            this[it.first] = this.getOrDefault(it.first, 0.0) + it.second
         }
     }
     for ((stock, value) in avgPrice) avgPrice[stock] =
@@ -227,13 +226,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var cheapestGood: String? = null
-    var minPrice = Double.MAX_VALUE
+    var minPrice = -1.0
 
     for ((key, value) in stuff) {
-        if (value.first != kind)
-            continue
-
-        if (value.second < minPrice) {
+        if (value.first != kind) continue
+        if (value.second < minPrice || minPrice == -1.0) {
             minPrice = value.second
             cheapestGood = key
         }
@@ -376,7 +373,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var val1 = sortedList.first().first
     var val2 = sortedList.last().first
     var it1 = 0
-    var it2 = list.size - 1
+    var it2 = sortedList.size - 1
 
     while (val1 + val2 != number) {
         if (val1 + val2 < number)
@@ -420,10 +417,10 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val values = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
 
     var it = 1
-    for ((first, second) in treasures.values) {
+    for ((weight, value) in treasures.values) {
         for (w in 0..capacity) {
-            if (w >= first && (second + values[it - 1][w - first]) > values[it - 1][w])
-                values[it][w] = second + values[it - 1][w - first]
+            if (w >= weight && (value + values[it - 1][w - weight]) > values[it - 1][w])
+                values[it][w] = value + values[it - 1][w - weight]
             else values[it][w] = values[it - 1][w]
         }
         it++

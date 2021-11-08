@@ -3,7 +3,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import lesson3.task1.digitCountInNumber
 import java.lang.StringBuilder
 import kotlin.math.*
 
@@ -341,7 +340,7 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
 operator fun Char.times(other: Int): String = this.toString().repeat(other)
 operator fun Char.plus(other: Char): String = this.toString() + other.toString()
 
-const val romanSymbols = "IVXLCDM"
+const val romanDigits = "IVXLCDM"
 
 fun roman(n: Int): String {
     var n2 = n
@@ -356,10 +355,10 @@ fun roman(n: Int): String {
         n2 %= pow(10, magnitude)
 
         romanStr += when (msd) {
-            in 1..3 -> romanSymbols[0 + magnitude * 2] * msd
-            in 5..8 -> romanSymbols[1 + magnitude * 2] + romanSymbols[0 + magnitude * 2] * (msd - 5)
-            4 -> romanSymbols[0 + magnitude * 2] + romanSymbols[1 + magnitude * 2]
-            9 -> romanSymbols[0 + magnitude * 2] + romanSymbols[2 + magnitude * 2]
+            in 1..3 -> romanDigits[0 + magnitude * 2] * msd
+            in 5..8 -> romanDigits[1 + magnitude * 2] + romanDigits[0 + magnitude * 2] * (msd - 5)
+            4 -> romanDigits[0 + magnitude * 2] + romanDigits[1 + magnitude * 2]
+            9 -> romanDigits[0 + magnitude * 2] + romanDigits[2 + magnitude * 2]
             else -> ""
         }
     } while (magnitude-- > 0)
