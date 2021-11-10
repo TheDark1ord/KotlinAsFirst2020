@@ -80,8 +80,10 @@ class Tests {
         assertEquals(-1, bestLongJump("700 + 700"))
 
         assertEquals(-1, bestLongJump("707- 717 777"))
+        assertEquals(-1, bestLongJump("-707 717 777"))
         assertEquals(-1, bestLongJump("707 -% 717 777"))
         assertEquals(-1, bestLongJump("707 @ 717 777"))
+        assertEquals(-1, bestLongJump("718   569"))
     }
 
     @Test

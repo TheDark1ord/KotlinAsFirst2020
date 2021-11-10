@@ -100,9 +100,7 @@ val months: Map<String, Int> = mapOf(
 fun dateStrToDigit(str: String): String {
     if (str.contains("-"))
         return ""
-
     val dateStr = str.split(" ")
-
     if (dateStr.size != 3)
         return ""
 
@@ -113,7 +111,7 @@ fun dateStrToDigit(str: String): String {
             months.getOrDefault(dateStr[1], -1),
             dateStr[2].toInt()
         )
-    } catch (e: Throwable) {
+    } catch (e: NumberFormatException) {
         return ""
     }
     if (dateInt[1] == -1)
@@ -143,7 +141,7 @@ fun dateDigitToStr(digital: String): String {
         dateInt = mutableListOf<Int>().apply {
             digital.split(".").forEach { this.add(it.toInt()) }
         }
-    } catch (e: Throwable) {
+    } catch (e: NumberFormatException) {
         return ""
     }
     if (dateInt.size != 3)
@@ -153,7 +151,7 @@ fun dateDigitToStr(digital: String): String {
 
     return String.format(
         "%d %s %d", dateInt[0],
-        months.filter { it.value == dateInt[1] }.keys.first(), dateInt[2]
+        months.filterValues { it == dateInt[1] }.keys.first(), dateInt[2]
     )
 }
 
@@ -194,15 +192,14 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (Regex("[^\\d% -]").containsMatchIn(jumps))
+    if (Regex("[^\\d% -]").containsMatchIn(jumps)
+        ||
+        // Проверка на склеенные символы (-607, 650%, -%), а также на не одиночные пробелы
+        Regex("([%\\-]\\d+)|(\\d+[%\\-])|([%\\-][%\\-])|(\\s{2,})").containsMatchIn((jumps)))
         return -1
 
-    return try {
-        jumps.split(" ").maxOf {
-            if (it == "%" || it == "-") -1 else it.toInt()
-        }
-    } catch (e: NumberFormatException) {
-        -1
+    return jumps.split(" ").maxOf {
+        if (it == "%" || it == "-") -1 else it.toInt()
     }
 }
 
@@ -378,7 +375,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         throw  IllegalArgumentException()
 
 
-    val mem = Array(cells) { 0 }
+    val mem = MutableList(cells) { 0 }
     var iP = 0
     var mP = cells / 2
     var total = 0
@@ -399,5 +396,5 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             throw IllegalStateException()
         iP++; total++
     }
-    return mem.toList()
+    return mem
 }
