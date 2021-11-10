@@ -242,7 +242,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int = Regex(
-    "\\b(\\S+)\\s\\1\\b",
+    "(\\S+)\\s\\1",
     RegexOption.IGNORE_CASE
 ).find(str)?.range?.first ?: -1
 
@@ -258,10 +258,10 @@ fun firstDuplicateIndex(str: String): Int = Regex(
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    if (!Regex("( ?\\S+ \\d+(\\.\\d+)?(;|\$))+").matches(description))
+    if (!Regex("( ?[^\\s;]+ \\d+(\\.\\d+)?(;|\$))+").matches(description))
         return ""
 
-    return Regex("\\S+ \\d+(\\.\\d+)?")
+    return Regex("[^\\s;]+ \\d+(\\.\\d+)?")
         .findAll(description)
         .map { it.value }.toList()
         .associate {

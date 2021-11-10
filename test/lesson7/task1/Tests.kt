@@ -252,7 +252,6 @@ Basic, Ruby, Swift.
 
         File("temp.html").delete()
     }
-
     @Test
     @Tag("22")
     fun markdownToHtmlSimple() {

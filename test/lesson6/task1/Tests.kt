@@ -84,8 +84,6 @@ class Tests {
         assertEquals(-1, bestLongJump("707 -% 717 777"))
         assertEquals(-1, bestLongJump("707 @ 717 777"))
         assertEquals(-1, bestLongJump("718   569"))
-
-        assertEquals(-1, bestLongJump("\\\"\\\"\""))
     }
 
     @Test
@@ -118,6 +116,10 @@ class Tests {
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
         assertEquals(0, firstDuplicateIndex("5 5"))
+        assertEquals(
+            24,
+            firstDuplicateIndex("a g a s a x a g a s a x ` ` a a a a a a a a a a a a a a a a a a a a a a a a a a h a j o c")
+        )
     }
 
     @Test
