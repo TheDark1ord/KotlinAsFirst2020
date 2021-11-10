@@ -84,6 +84,8 @@ class Tests {
         assertEquals(-1, bestLongJump("707 -% 717 777"))
         assertEquals(-1, bestLongJump("707 @ 717 777"))
         assertEquals(-1, bestLongJump("718   569"))
+
+        assertEquals(-1, bestLongJump("\\\"\\\"\""))
     }
 
     @Test
@@ -115,6 +117,7 @@ class Tests {
         assertEquals(9, firstDuplicateIndex("Он пошёл в в школу"))
         assertEquals(40, firstDuplicateIndex("Яблоко упало на ветку с ветки оно упало на на землю"))
         assertEquals(9, firstDuplicateIndex("Мы пошли прямо Прямо располагался магазин"))
+        assertEquals(0, firstDuplicateIndex("5 5"))
     }
 
     @Test
@@ -123,6 +126,7 @@ class Tests {
         assertEquals("", mostExpensive(""))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
+        assertEquals("Тест*", mostExpensive("Тест* 0"))
     }
 
     @Test
@@ -136,6 +140,7 @@ class Tests {
         assertEquals(-1, fromRoman("Z"))
 
         assertEquals(-1, fromRoman("IC"))
+        assertEquals(-1, fromRoman(""))
     }
 
     @Test
@@ -161,5 +166,11 @@ class Tests {
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
 
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(20, "]]]+++>>>[[[", 20) }
+        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(20, "++>>[]]", 20) }
+
+        assertEquals(
+            listOf(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+            computeDeviceCells(11, "<<<<< + >>[[++]]", 25)
+        )
     }
 }

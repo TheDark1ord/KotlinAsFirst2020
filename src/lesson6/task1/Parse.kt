@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import lesson2.task2.daysInMonth
-import lesson4.task1.romanDigits
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.lang.NumberFormatException
@@ -190,7 +189,7 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (Regex("[^\\d% -]").containsMatchIn(jumps)
+    if (Regex("[^\\d\\s%-]").containsMatchIn(jumps)
         ||
         // Проверка на склеенные символы (-607, 650%, -%), а также на не одиночные пробелы
         Regex("([%\\-]\\d+)|(\\d+[%\\-])|([%\\-][%\\-])|(\\s{2,})").containsMatchIn((jumps)))
@@ -243,7 +242,7 @@ fun plusMinus(expression: String): Int {
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int = Regex(
-    "\\b(\\p{L}+)\\s\\1\\b",
+    "\\b(\\S+)\\s\\1\\b",
     RegexOption.IGNORE_CASE
 ).find(str)?.range?.first ?: -1
 
@@ -259,10 +258,10 @@ fun firstDuplicateIndex(str: String): Int = Regex(
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    if (!Regex("( ?\\p{L}+ \\d+(\\.\\d+)?(;|\$))+").matches(description))
+    if (!Regex("( ?\\S+ \\d+(\\.\\d+)?(;|\$))+").matches(description))
         return ""
 
-    return Regex("\\p{L}+ \\d+(\\.\\d+)?")
+    return Regex("\\S+ \\d+(\\.\\d+)?")
         .findAll(description)
         .map { it.value }.toList()
         .associate {
@@ -319,7 +318,7 @@ fun fromRoman(roman: String): Int {
         } else result += num1
         i++
     }
-    return result
+    return if (result == 0) -1 else result
 }
 
 /**
@@ -379,13 +378,25 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var total = 0
     val bracketsPos = Stack<Int>()
 
+    fun skip() {
+        bracketCounter = 1
+        while (true) {
+            iP++
+            if (commands[iP] == '[')
+                bracketCounter++
+            else if (commands[iP] == ']')
+                if (--bracketCounter == 0)
+                    return
+        }
+    }
+
     while (iP < commands.length && total < limit) {
         when (commands[iP]) {
             '+' -> mem[mP]++
             '-' -> mem[mP]--
             '>' -> mP++
             '<' -> mP--
-            '[' -> if (mem[mP] == 0) iP = commands.indexOf(']', iP)
+            '[' -> if (mem[mP] == 0) skip()
             else bracketsPos.push(iP)
             ']' -> if (mem[mP] != 0) iP = bracketsPos.peek()
             else bracketsPos.pop()
