@@ -66,6 +66,9 @@ class Tests {
         assertEquals("+42566789", flattenPhoneNumber("+42(56 -- 67)89"))
         assertEquals("", flattenPhoneNumber("ab-123"))
         assertEquals("", flattenPhoneNumber("134_+874"))
+
+        assertEquals("", flattenPhoneNumber("+-1234"))
+        assertEquals("", flattenPhoneNumber("+7 (--- ) 1234"))
     }
 
     @Test
@@ -76,6 +79,9 @@ class Tests {
         assertEquals(754, bestLongJump("700 717 707 % 754"))
         assertEquals(-1, bestLongJump("700 + 700"))
 
+        assertEquals(-1, bestLongJump("707- 717 777"))
+        assertEquals(-1, bestLongJump("707 -% 717 777"))
+        assertEquals(-1, bestLongJump("707 @ 717 777"))
     }
 
     @Test
@@ -126,6 +132,8 @@ class Tests {
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+
+        assertEquals(-1, fromRoman("IC"))
     }
 
     @Test
@@ -149,5 +157,7 @@ class Tests {
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "===", 3) }
         assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(10, "+>+>[+>", 3) }
         assertThrows(IllegalStateException::class.java) { computeDeviceCells(20, ">>>>>>>>>>>>>", 12) }
+
+        assertThrows(IllegalArgumentException::class.java) { computeDeviceCells(20, "]]]+++>>>[[[", 20) }
     }
 }

@@ -2,6 +2,13 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+import lesson4.task1.romanDigits
+import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
+import java.lang.NumberFormatException
+import java.util.Stack
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -48,7 +55,7 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main() {
-    println("Введите время в формате ЧЧ:ММ:СС")
+    /*println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
         val seconds = timeStrToSeconds(line)
@@ -59,9 +66,25 @@ fun main() {
         }
     } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
+    }*/
+
+    plusMinus("2 + 2")
 }
 
+val months: Map<String, Int> = mapOf(
+    "января" to 1,
+    "февраля" to 2,
+    "марта" to 3,
+    "апреля" to 4,
+    "мая" to 5,
+    "июня" to 6,
+    "июля" to 7,
+    "августа" to 8,
+    "сентября" to 9,
+    "октября" to 10,
+    "ноября" to 11,
+    "декабря" to 12
+)
 
 /**
  * Средняя (4 балла)
@@ -74,7 +97,32 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    if (str.contains("-"))
+        return ""
+
+    val dateStr = str.split(" ")
+
+    if (dateStr.size != 3)
+        return ""
+
+    val dateInt: IntArray
+    try {
+        dateInt = intArrayOf(
+            dateStr[0].toInt(),
+            months.getOrDefault(dateStr[1], -1),
+            dateStr[2].toInt()
+        )
+    } catch (e: Throwable) {
+        return ""
+    }
+    if (dateInt[1] == -1)
+        return ""
+    if (dateInt[0] > daysInMonth(dateInt[1], dateInt[2]))
+        return ""
+
+    return String.format("%02d.%02d.%d", dateInt[0], dateInt[1], dateInt[2])
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +134,28 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    if (digital.contains("-"))
+        return ""
+
+    val dateInt: List<Int>
+    try {
+        dateInt = mutableListOf<Int>().apply {
+            digital.split(".").forEach { this.add(it.toInt()) }
+        }
+    } catch (e: Throwable) {
+        return ""
+    }
+    if (dateInt.size != 3)
+        return ""
+    if (dateInt[0] > daysInMonth(dateInt[1], dateInt[2]) || dateInt[0] < 0)
+        return ""
+
+    return String.format(
+        "%d %s %d", dateInt[0],
+        months.filter { it.value == dateInt[1] }.keys.first(), dateInt[2]
+    )
+}
 
 /**
  * Средняя (4 балла)
@@ -102,7 +171,17 @@ fun dateDigitToStr(digital: String): String = TODO()
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    if (Regex("\\+\\D").containsMatchIn(phone))
+        return ""
+
+    val phoneFlatten = phone.replace("[- ]".toRegex(), "")
+    val phoneRegex = Regex("(\\+\\d+)?(?!\\(\\))(\\(\\d+\\))?\\d+")
+
+    if (phoneRegex.matches(phoneFlatten))
+        return phoneFlatten.replace("[)(]".toRegex(), "")
+    return ""
+}
 
 /**
  * Средняя (5 баллов)
@@ -114,7 +193,18 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    if (Regex("[^\\d% -]").containsMatchIn(jumps))
+        return -1
+
+    return try {
+        jumps.split(" ").maxOf {
+            if (it == "%" || it == "-") -1 else it.toInt()
+        }
+    } catch (e: NumberFormatException) {
+        -1
+    }
+}
 
 /**
  * Сложная (6 баллов)
@@ -138,7 +228,15 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (!Regex("(\\d+(( [+-] )|\$))+").matches(expression))
+        throw IllegalArgumentException()
+
+    return Regex("[+-]?\\d+")
+        .findAll(
+            expression.replace(" ", "")
+        ).sumOf { it.value.toInt() }
+}
 
 /**
  * Сложная (6 баллов)
@@ -149,7 +247,10 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int = Regex(
+    "\\b(\\p{L}+)\\s\\1\\b",
+    RegexOption.IGNORE_CASE
+).find(str)?.range?.first ?: -1
 
 /**
  * Сложная (6 баллов)
@@ -162,7 +263,19 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (!Regex("( ?\\p{L}+ \\d+(\\.\\d+)?(;|\$))+").matches(description))
+        return ""
+
+    return Regex("\\p{L}+ \\d+(\\.\\d+)?")
+        .findAll(description)
+        .map { it.value }.toList()
+        .associate {
+            it.split(" ")
+                .let { p -> Pair(p[0], p[1]) }
+        }
+        .maxByOrNull { it.value.toDouble() }?.key ?: ""
+}
 
 /**
  * Сложная (6 баллов)
@@ -175,7 +288,44 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+val romanValues = mapOf(
+    'I' to 1,
+    'V' to 5,
+    'X' to 10,
+    'L' to 50,
+    'C' to 100,
+    'D' to 500,
+    'M' to 1000
+)
+
+fun fromRoman(roman: String): Int {
+    var result = 0
+    var num1: Int
+    var num2: Int
+
+    var i = 0
+    while (i < roman.length) {
+        num1 = romanValues.getOrDefault(roman[i], -1)
+
+        if (i < (roman.length - 1)) {
+            num2 = romanValues.getOrDefault(roman[i + 1], -1)
+            if (num1 == -1 || num2 == -1)
+                return -1
+
+            if (num1 < num2) {
+                // Результатом вычитания пары цифр может быть только 4, 9, 40, 90 и т.д
+                // Следовательно, соотношение значений в паре может быть только 1/5 и 1/10
+                val ratio = num1.toDouble() / num2.toDouble()
+                if (ratio != 0.2 && ratio != 0.1)
+                    return -1
+                result += num2 - num1
+                i++
+            } else result += num1
+        } else result += num1
+        i++
+    }
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -213,4 +363,41 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    if (Regex("[^><+\\-\\[\\] ]").containsMatchIn(commands))
+        throw IllegalArgumentException()
+
+    var bracketCounter = 0
+    for (c in commands) {
+        if (c == '[')
+            bracketCounter++
+        if (c == ']' && --bracketCounter < 0)
+            throw IllegalArgumentException()
+    }
+    if (bracketCounter > 0)
+        throw  IllegalArgumentException()
+
+
+    val mem = Array(cells) { 0 }
+    var iP = 0
+    var mP = cells / 2
+    var total = 0
+    val bracketsPos = Stack<Int>()
+
+    while (iP < commands.length && total < limit) {
+        when (commands[iP]) {
+            '+' -> mem[mP]++
+            '-' -> mem[mP]--
+            '>' -> mP++
+            '<' -> mP--
+            '[' -> if (mem[mP] == 0) iP = commands.indexOf(']', iP)
+            else bracketsPos.push(iP)
+            ']' -> if (mem[mP] != 0) iP = bracketsPos.peek()
+            else bracketsPos.pop()
+        }
+        if (mP < 0 || mP >= cells)
+            throw IllegalStateException()
+        iP++; total++
+    }
+    return mem.toList()
+}
