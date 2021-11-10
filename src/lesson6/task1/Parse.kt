@@ -55,7 +55,7 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main() {
-    /*println("Введите время в формате ЧЧ:ММ:СС")
+    println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
     if (line != null) {
         val seconds = timeStrToSeconds(line)
@@ -66,9 +66,7 @@ fun main() {
         }
     } else {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }*/
-
-    plusMinus("2 + 2")
+    }
 }
 
 val months: Map<String, Int> = mapOf(
