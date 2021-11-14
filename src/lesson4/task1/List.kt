@@ -202,23 +202,7 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-
-    var c = 2
-    val ch = n
-    var str = "";
-    while (c < 10) {
-        if (n % c == 0) {
-            while (ch % c == 0) {
-                str = "$str$c*";
-                ch / c
-            }
-            c += 1;
-        }
-
-    }
-    return str.dropLast(1)
-}
+fun factorizeToString(n: Int): String = TODO()
 
 /**
  * Средняя (3 балла)

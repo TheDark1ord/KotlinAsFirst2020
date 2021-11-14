@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import kotlinx.html.B
+import javax.print.attribute.standard.MediaSizeName.B
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -183,7 +186,18 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var namemin = " "
+    var min = Double.MAX_VALUE
+    for ((item, par) in stuff) {
+        if (par.first == kind && par.second < min) {
+            namemin = item
+            min = par.second
+        }
+    }
+    return if (namemin != " ") namemin
+    else null
+}
 
 /**
  * Средняя (3 балла)
@@ -277,7 +291,17 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (ch in list.indices) {
+        list.indices.forEach { ch1 ->
+            if (list.elementAt(ch) + list.elementAt(ch1) == number && list.elementAt(ch) != list.elementAt(ch1)) {
+                return Pair(ch, ch1)
+            }
+        }
+    }
+    return Pair(-1, -1)
+}
+
 
 /**
  * Очень сложная (8 баллов)

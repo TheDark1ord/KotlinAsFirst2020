@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson3.task1.sin
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -138,7 +140,25 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    var res = 0
+    val parts = expression.split(" ")
+    var result = 0
+    var sign = 1
+    return try {
+        for (part in parts) {
+            if (part == "+") sign = 1
+            if (part == "-") sign = -1
+            if (part != "+" && part != "-") res += part.toInt() * sign
+            // val number = part.toInt()
+            //  result = result * 60 + number
+        }
+        res
+    } catch (e: NumberFormatException) {
+        -1
+    }
+}
+
 
 /**
  * Сложная (6 баллов)
