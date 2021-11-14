@@ -191,12 +191,15 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     if (Regex("[^\\d\\s%-]").containsMatchIn(jumps)
         ||
-        // Проверка на склеенные символы (-607, 650%, -%), а также на не одиночные пробелы
-        Regex("([%\\-]\\d+)|(\\d+[%\\-])|([%\\-][%\\-])|(\\s{2,})").containsMatchIn((jumps)))
+        Regex("-\\d+").containsMatchIn(jumps))
         return -1
 
-    return jumps.split(" ").maxOf {
-        if (it == "%" || it == "-") -1 else it.toInt()
+    return try {
+        jumps.split(" ").maxOf {
+            if (it == "%" || it == "-") -1 else it.toInt()
+        }
+    } catch (e: NumberFormatException) {
+        -1
     }
 }
 
