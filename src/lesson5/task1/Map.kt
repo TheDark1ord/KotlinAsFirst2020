@@ -294,7 +294,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (ch in list.indices) {
         list.indices.forEach { ch1 ->
-            if (list.elementAt(ch) + list.elementAt(ch1) == number && list.elementAt(ch) != list.elementAt(ch1)) {
+            if (list.elementAt(ch) + list.elementAt(ch1) == number && ch != ch1) {
                 return Pair(ch, ch1)
             }
         }

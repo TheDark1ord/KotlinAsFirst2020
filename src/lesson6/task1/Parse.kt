@@ -2,6 +2,10 @@
 
 package lesson6.task1
 
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 import lesson3.task1.sin
 
 // Урок 6: разбор строк, исключения
@@ -76,7 +80,36 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+
+    val parts = str.split(" ")
+    val month = mapOf(
+        "января" to "01",
+        "февраля" to "02",
+        "марта" to "03",
+        "апреля" to "04",
+        "мая" to "05",
+        "июня" to "06",
+        "июля" to "07",
+        "августа" to "08",
+        "сентября" to "09",
+        "октября" to "10",
+        "ноября" to "11",
+        "декабря" to "12"
+    )
+    return try {
+        if (month[parts[1]] == null) return ""
+        if (parts[0].toInt() in 1..31 && month[parts[1]]?.toInt()!! % 4 == 0 &&
+            parts[0].toInt() in 1..29 || month[parts[1]]?.toInt()!! % 4 != 0 &&
+            parts[0].toInt() in 1..28 || month[parts[1]]?.toInt()!! % 400 == 0 && parts[0].toInt() in 1..29
+        )
+            return String.format("%02d.%02d.%02d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
+        else ""
+    } catch (e: IndexOutOfBoundsException) {
+        ""
+    }
+}
+
 
 /**
  * Средняя (4 балла)
@@ -143,20 +176,19 @@ fun bestHighJump(jumps: String): Int = TODO()
 fun plusMinus(expression: String): Int {
     var res = 0
     val parts = expression.split(" ")
-    var result = 0
     var sign = 1
-    return try {
-        for (part in parts) {
-            if (part == "+") sign = 1
-            if (part == "-") sign = -1
-            if (part != "+" && part != "-") res += part.toInt() * sign
-            // val number = part.toInt()
-            //  result = result * 60 + number
-        }
-        res
-    } catch (e: NumberFormatException) {
-        -1
+    if (!"$expression + ".matches(Regex("""(\d+ [+-] )+"""))) {
+        throw IllegalArgumentException(expression)
     }
+    for (part in parts) {
+        if (part == "+") sign = 1
+        if (part == "-") sign = -1
+        if (part != "+" && part != "-") {
+            res += part?.toInt() * sign
+        }
+    }
+    return res
+
 }
 
 
@@ -169,7 +201,14 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val part = str.split(" ")
+    var result = 0
+    for (ch in part.indices) {
+        if (part[ch] == part[ch + 1])
+    }
+
+}
 
 /**
  * Сложная (6 баллов)
