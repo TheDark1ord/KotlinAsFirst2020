@@ -2,9 +2,7 @@
 
 package lesson6.task1
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
 
 import lesson3.task1.sin
 
@@ -204,10 +202,7 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     val part = str.split(" ")
     var result = 0
-    for (ch in part.indices) {
-        if (part[ch] == part[ch + 1])
-    }
-
+    return 0
 }
 
 /**
