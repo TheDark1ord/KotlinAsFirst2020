@@ -100,8 +100,8 @@ fun dateStrToDigit(str: String): String {
         if (parts[0].toInt() in 1..31 && month[parts[1]]?.toInt()!! % 4 == 0 &&
             parts[0].toInt() in 1..29 || month[parts[1]]?.toInt()!! % 4 != 0 &&
             parts[0].toInt() in 1..28 || month[parts[1]]?.toInt()!! % 400 == 0 && parts[0].toInt() in 1..29
-        )
-            return String.format("%02d.%02d.%02d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
+        )   //последние условия это обработка условий существования високосных лет
+            return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
         else ""
     } catch (e: IndexOutOfBoundsException) {
         ""
