@@ -93,7 +93,7 @@ fun dateStrToDigit(str: String): String {
     )
     return try {
         if (month[parts[1]] == null) return ""
-        val leap: Boolean = (parts[1] == "февраля" && parts[2].toInt() % 400 == 0)
+        val leap: Boolean = (parts[1] == "февраля" && parts[2].toInt() % 400 == 0) //обработка високосного года
                 || (parts[1] == "февраля" && parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0)
         if ((parts[1] != "февраля" && parts[0].toInt() in 1..31)
             || (parts[1] == "февраля" && parts[0].toInt() in 1..28 && !leap)
