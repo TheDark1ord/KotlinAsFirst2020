@@ -218,7 +218,7 @@ fun convert(n: Int, base: Int): List<Int> {
         return res
     }
     var c = n
-    while (c > base) {
+    while (c > 1) {
         res.add(c % base)
         c /= base
     }
