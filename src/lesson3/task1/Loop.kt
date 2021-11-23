@@ -2,6 +2,8 @@
 
 package lesson3.task1
 
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 // Урок 3: циклы
@@ -132,11 +134,14 @@ fun collatzSteps(x: Int): Int = TODO()
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = 1
-    while (k % m != 0 || k % n != 0) {
-        k += 1
+    var m1 = max(m, n)
+    var n1 = min(m, n)
+    while (m1 != n1) {
+        if (m1 > n1) {
+            m1 -= n1
+        } else n1 -= m1
     }
-    return k
+    return n * m / m1
 }
 
 /**
