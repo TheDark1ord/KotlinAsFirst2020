@@ -2,6 +2,11 @@
 
 package lesson6.task1
 
+import java.text.SimpleDateFormat
+
+
+
+
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -76,6 +81,8 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
+
+
     val parts = str.split(" ")
     val month = mapOf(
         "января" to "01",
