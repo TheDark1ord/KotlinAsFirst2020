@@ -3,9 +3,6 @@
 package lesson6.task1
 
 
-
-import lesson3.task1.sin
-
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -95,12 +92,18 @@ fun dateStrToDigit(str: String): String {
         "ноября" to "11",
         "декабря" to "12"
     )
+
+
+
     return try {
         if (month[parts[1]] == null) return ""
-        if (parts[0].toInt() in 1..31 && month[parts[1]]?.toInt()!! % 4 == 0 &&
-            parts[0].toInt() in 1..29 || month[parts[1]]?.toInt()!! % 4 != 0 &&
-            parts[0].toInt() in 1..28 || month[parts[1]]?.toInt()!! % 400 == 0 && parts[0].toInt() in 1..29
-        )   //последние условия это обработка условий существования високосных лет
+
+        val leap: Boolean = if (parts[1] == "февраля" && parts[2].toInt() % 400 == 0) true //обработка високосного года
+        else parts[1] == "февраля" && parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0
+        if ((parts[1] != "февраля" && parts[0].toInt() in 1..31)
+            || (parts[1] == "февраля" && parts[0].toInt() in 1..28 && !leap)
+            || (parts[1] == "февраля" && parts[0].toInt() in 1..31 && leap)
+        )
             return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
         else ""
     } catch (e: IndexOutOfBoundsException) {
