@@ -76,7 +76,6 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-
     val parts = str.split(" ")
     val month = mapOf(
         "января" to "01",
@@ -92,17 +91,13 @@ fun dateStrToDigit(str: String): String {
         "ноября" to "11",
         "декабря" to "12"
     )
-
-
-
     return try {
         if (month[parts[1]] == null) return ""
-
         val leap: Boolean = if (parts[1] == "февраля" && parts[2].toInt() % 400 == 0) true //обработка високосного года
         else parts[1] == "февраля" && parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0
         if ((parts[1] != "февраля" && parts[0].toInt() in 1..31)
             || (parts[1] == "февраля" && parts[0].toInt() in 1..28 && !leap)
-            || (parts[1] == "февраля" && parts[0].toInt() in 1..31 && leap)
+            || (parts[1] == "февраля" && parts[0].toInt() in 1..29 && leap)
         )
             return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
         else ""
@@ -110,7 +105,6 @@ fun dateStrToDigit(str: String): String {
         ""
     }
 }
-
 
 /**
  * Средняя (4 балла)
@@ -189,9 +183,7 @@ fun plusMinus(expression: String): Int {
         }
     }
     return res
-
 }
-
 
 /**
  * Сложная (6 баллов)
