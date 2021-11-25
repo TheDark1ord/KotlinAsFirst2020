@@ -2,11 +2,6 @@
 
 package lesson6.task1
 
-import java.text.SimpleDateFormat
-
-
-
-
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -81,32 +76,30 @@ fun main() {
  * входными данными.
  */
 fun dateStrToDigit(str: String): String {
-
-
     val parts = str.split(" ")
     val month = mapOf(
-        "января" to "01",
-        "февраля" to "02",
-        "марта" to "03",
-        "апреля" to "04",
-        "мая" to "05",
-        "июня" to "06",
-        "июля" to "07",
-        "августа" to "08",
-        "сентября" to "09",
-        "октября" to "10",
-        "ноября" to "11",
-        "декабря" to "12"
+        "января" to ("01" to 31),
+        "февраля" to ("02" to 28),
+        "марта" to ("03" to 31),
+        "апреля" to ("04" to 30),
+        "мая" to ("05" to 31),
+        "июня" to ("06" to 30),
+        "июля" to ("07" to 31),
+        "августа" to ("08" to 31),
+        "сентября" to ("09" to 30),
+        "октября" to ("10" to 31),
+        "ноября" to ("11" to 30),
+        "декабря" to ("12" to 31),
     )
     return try {
         if (month[parts[1]] == null) return ""
         val leap: Boolean = (parts[1] == "февраля" && parts[2].toInt() % 400 == 0) //обработка високосного года
                 || (parts[1] == "февраля" && parts[2].toInt() % 4 == 0 && parts[2].toInt() % 100 != 0)
-        if ((parts[1] != "февраля" && parts[0].toInt() in 1..31)
+        if ((parts[1] != "февраля" && parts[0].toInt() in 1..month[parts[1]]?.second!!)
             || (parts[1] == "февраля" && parts[0].toInt() in 1..28 && !leap)
             || (parts[1] == "февраля" && parts[0].toInt() in 1..29 && leap)
         )
-            return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.toInt(), parts[2].toInt())
+            return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.first?.toInt(), parts[2].toInt())
         else ""
     } catch (e: IndexOutOfBoundsException) {
         ""
@@ -186,7 +179,7 @@ fun plusMinus(expression: String): Int {
         if (part == "+") sign = 1
         if (part == "-") sign = -1
         if (part != "+" && part != "-") {
-            res += part?.toInt() * sign
+            res += part.toInt() * sign
         }
     }
     return res
@@ -201,11 +194,8 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int {
-    val part = str.split(" ")
-    var result = 0
-    return 0
-}
+fun firstDuplicateIndex(str: String): Int = TODO()
+
 
 /**
  * Сложная (6 баллов)
