@@ -372,6 +372,10 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         return Pair(-1, -1)
     sortedList.sortBy { it.first }
 
+    // n^2
+    // nlog(n)
+    // n
+
     var val1 = sortedList.first().first
     var val2 = sortedList.last().first
     var it1 = 0

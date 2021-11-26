@@ -2,7 +2,16 @@
 
 package lesson7.task1
 
+import org.junit.Test
+import ru.spbstu.wheels.NullableMonad.filter
+import java.io.BufferedWriter
 import java.io.File
+import java.lang.NullPointerException
+import java.lang.StringBuilder
+import java.util.*
+import javax.management.RuntimeErrorException
+import kotlin.RuntimeException
+import kotlin.system.measureTimeMillis
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -92,7 +101,19 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+
+    val replaces = mapOf(
+        'Ы' to 'И', 'ы' to 'и',
+        'Я' to 'А', 'я' to 'а',
+        'Ю' to 'У', 'ю' to 'у',
+    )
+    val text = StringBuilder(File(inputName).readText())
+    for (i in Regex("(?<=[ЖЧШЩжчшщ])[ЫЯЮыяю]").findAll(text).iterator()) {
+        text[i.range.first] = replaces[text[i.range.first]]!!
+    }
+    writer.write(text.toString())
+    writer.close()
 }
 
 /**
@@ -113,7 +134,14 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).readLines().map { it.trim() }.toList()
+    val maxLen = lines.maxOf { it.length }
+
+    val writer = File(outputName).bufferedWriter()
+    for (line in lines) {
+        writer.write(" ".repeat((maxLen - line.length) / 2) + line + "\n")
+    }
+    writer.close()
 }
 
 /**
@@ -268,21 +296,84 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+enum class TagType { NONE, I, B, S }
+data class Tag(val pos: Int, val type: TagType)
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+
+    val text = StringBuilder(File(inputName).readText())
+    val tags = Stack<Tag>()
+    tags.push(Tag(0, TagType.NONE))
+
+    fun insertTag(tag: Tag) {
+        val htmlTagOpen = mapOf(
+            TagType.NONE to "",
+            TagType.I to "<i>",
+            TagType.B to "<b>",
+            TagType.S to "<s>",
+        )
+        val htmlTagClose = mapOf(
+            TagType.NONE to "",
+            TagType.I to "</i>",
+            TagType.B to "</b>",
+            TagType.S to "</s>",
+        )
+
+        if (tags.peek().type == tag.type) {
+            tags.pop()
+            text.insert(tag.pos, htmlTagClose[tag.type])
+        } else {
+            tags.push(Tag(tag.pos, tag.type))
+            text.insert(tag.pos, htmlTagOpen[tag.type])
+        }
+    }
+
+    for (rawTag in Regex("(\\*{1,2})|(~~)").findAll(text)) {
+        val value = rawTag.value
+        text.delete(rawTag.range.first, rawTag.range.last + 1)
+        when (value) {
+            "**" -> insertTag(Tag(rawTag.range.first, TagType.B))
+            "*" -> insertTag(Tag(rawTag.range.first, TagType.I))
+            "~~" -> insertTag(Tag(rawTag.range.first, TagType.S))
+        }
+    }
+    writer.write("<html>\n")
+    writer.write("<body>\n")
+    writer.write("<p>\n")
+
+    var firstLine = true
+    val lines = text.lines()
+    for (line in 0 until (lines.size - 1)) {
+        if (lines[line] == "") {
+            if (lines[line + 1] != "" && !firstLine)
+                writer.write("</p>\n<p>\n")
+        } else {
+            writer.write(lines[line] + "\n")
+            firstLine = false
+        }
+    }
+    if (lines.last() != "")
+        writer.write(lines.last() + "\n")
+
+    writer.write("</p>\n")
+    writer.write("</body>\n")
+    writer.write("</html>\n")
+
+    writer.close()
 }
 
 /**
@@ -295,7 +386,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Каждый элемент ненумерованного списка начинается с новой строки и символа '*', каждый элемент нумерованного списка --
  * с новой строки, числа и точки. Каждый элемент вложенного списка начинается с отступа из пробелов, на 4 пробела большего,
- * чем список-родитель. Максимально глубина вложенности списков может достигать 6. "Верхние" списки файла начинются
+ * чем список-родитель. Максимально глубина вложенности списков может достигать 6. "Верхние" списки файла начинаются
  * прямо с начала строки.
  *
  * Следует вывести этот же текст в выходной файл в формате HTML:
@@ -382,8 +473,89 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+enum class ListType { NONE, ORDERED, UNORDERED }
+
+fun getListType(line: String): ListType {
+    if (Regex("^\\s*\\d+\\.\\s").containsMatchIn(line)) return ListType.ORDERED
+    else if (Regex("^\\s*\\*\\s").containsMatchIn(line)) return ListType.UNORDERED
+    else return ListType.NONE
+}
+
+fun closeList(writer: BufferedWriter, listStack: Stack<ListType>) {
+    writer.write(
+        if (listStack.pop() == ListType.ORDERED) "</ol>" else "</ul>"
+    )
+    if (!listStack.empty())
+        writer.write("</li>\n")
+    writer.newLine()
+}
+
+fun openList(writer: BufferedWriter, listStack: Stack<ListType>, listType: ListType) {
+    if (listType == ListType.ORDERED) {
+        listStack.push(ListType.ORDERED)
+        writer.write("<ol>\n")
+    } else {
+        listStack.push(ListType.UNORDERED)
+        writer.write("<ul>\n")
+    }
+}
+
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val listStack = Stack<ListType>()
+
+    writer.write("<html>\n")
+    writer.write("<body>\n")
+    writer.write("<p>\n")
+
+    for (line in File(inputName).readLines()) {
+        if (line == "") {
+            while (!listStack.empty())
+                closeList(writer, listStack)
+            writer.newLine()
+            continue
+        }
+
+        val listType = getListType(line)
+        if (listType != ListType.NONE) {
+            val spaceCount = line.takeWhile { it == ' ' }.length
+
+            // Manage lists
+            if (spaceCount > (listStack.size - 1) * 4) {
+                openList(writer, listStack, listType)
+            } else {
+                writer.write("</li>\n")
+
+                if (spaceCount < (listStack.size - 1) * 4) {
+                    while (spaceCount < (listStack.size - 1) * 4)
+                        closeList(writer, listStack)
+                } else if (listType != listStack.peek()) {
+                    closeList(writer, listStack)
+                    openList(writer, listStack, listType)
+                }
+            }
+            // Manage lists
+
+            // Add element
+            val trimmedLine = line.substring(
+                Regex("^\\s*((\\d+\\.)|(\\*))\\s").find(line)!!.range.last() + 1,
+                line.length
+            )
+            writer.write("<li>$trimmedLine")
+        } else {
+            writer.write(line)
+            writer.newLine()
+        }
+    }
+    writer.write("</li>\n")
+    while (!listStack.empty())
+        closeList(writer, listStack)
+
+    writer.write("</p>\n")
+    writer.write("</body>\n")
+    writer.write("</html>\n")
+
+    writer.close()
 }
 
 /**

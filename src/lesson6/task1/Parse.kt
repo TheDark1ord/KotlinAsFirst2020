@@ -189,10 +189,10 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    if (Regex("[^\\d\\s%-]").containsMatchIn(jumps)
-        ||
-        Regex("-\\d+").containsMatchIn(jumps))
-        return -1
+    if (Regex("[^\\d\\s%-]").containsMatchIn(jumps) ||
+        Regex("-\\d+").containsMatchIn(jumps)
+    ) return -1
+
 
     return try {
         jumps.split(" ").maxOf {
@@ -297,28 +297,26 @@ val romanValues = mapOf(
 
 fun fromRoman(roman: String): Int {
     var result = 0
-    var num1: Int
-    var num2: Int
 
     var i = 0
     while (i < roman.length) {
-        num1 = romanValues.getOrDefault(roman[i], -1)
+        val leftVal = romanValues.getOrDefault(roman[i], -1)
 
         if (i < (roman.length - 1)) {
-            num2 = romanValues.getOrDefault(roman[i + 1], -1)
-            if (num1 == -1 || num2 == -1)
+            val rightVal = romanValues.getOrDefault(roman[i + 1], -1)
+            if (leftVal == -1 || rightVal == -1)
                 return -1
 
-            if (num1 < num2) {
+            if (leftVal < rightVal) {
                 // Результатом вычитания пары цифр может быть только 4, 9, 40, 90 и т.д
                 // Следовательно, соотношение значений в паре может быть только 1/5 и 1/10
-                val ratio = num1.toDouble() / num2.toDouble()
+                val ratio = leftVal.toDouble() / rightVal.toDouble()
                 if (ratio != 0.2 && ratio != 0.1)
                     return -1
-                result += num2 - num1
+                result += rightVal - leftVal
                 i++
-            } else result += num1
-        } else result += num1
+            } else result += leftVal
+        } else result += leftVal
         i++
     }
     return if (result == 0) -1 else result

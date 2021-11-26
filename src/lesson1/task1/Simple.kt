@@ -2,6 +2,8 @@
 
 package lesson1.task1
 
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
 import kotlin.math.*
 
 // Урок 1: простые функции

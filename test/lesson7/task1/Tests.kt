@@ -313,6 +313,7 @@ Basic, Ruby, Swift.
     fun markdownToHtmlLists() {
         markdownToHtmlLists("input/markdown_lists.md", "temp.html")
         checkHtmlListsExample()
+        markdownToHtmlLists("input/markdown_lists_test.md", "temp.html")
     }
 
     @Test
