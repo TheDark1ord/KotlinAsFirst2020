@@ -353,7 +353,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val tags = Stack<Tag>()
     tags.push(Tag(0, TagType.NONE))
 
-    for (newLine in Regex("\\\\n(?!\\\\)").findAll(text))
+    for (newLine in Regex("(?<!\\\\)\\\\n").findAll(text))
         text.replace(newLine.range.first, newLine.range.last + 1, "\n")
     for (rawTag in Regex("(\\*{1,2})|(~~)").findAll(text)) {
         val value = rawTag.value
