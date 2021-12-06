@@ -68,6 +68,17 @@ fun main() {
     }
 }
 
+/**
+ * Средняя (4 балла)
+ *
+ * Дата представлена строкой вида "15 июля 2016".
+ * Перевести её в цифровой формат "15.07.2016".
+ * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
+ * При неверном формате входной строки вернуть пустую строку.
+ *
+ * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
+ * входными данными.
+ */
 val months: Map<String, Int> = mapOf(
     "января" to 1,
     "февраля" to 2,
@@ -83,17 +94,6 @@ val months: Map<String, Int> = mapOf(
     "декабря" to 12
 )
 
-/**
- * Средняя (4 балла)
- *
- * Дата представлена строкой вида "15 июля 2016".
- * Перевести её в цифровой формат "15.07.2016".
- * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
- * При неверном формате входной строки вернуть пустую строку.
- *
- * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
- * входными данными.
- */
 fun dateStrToDigit(str: String): String {
     if (str.contains("-"))
         return ""
@@ -101,9 +101,8 @@ fun dateStrToDigit(str: String): String {
     if (dateStr.size != 3)
         return ""
 
-    val dateInt: IntArray
-    try {
-        dateInt = intArrayOf(
+    val dateInt = try {
+        intArrayOf(
             dateStr[0].toInt(),
             months.getOrDefault(dateStr[1], -1),
             dateStr[2].toInt()
@@ -133,9 +132,8 @@ fun dateDigitToStr(digital: String): String {
     if (digital.contains("-"))
         return ""
 
-    val dateInt: List<Int>
-    try {
-        dateInt = mutableListOf<Int>().apply {
+    val dateInt = try {
+        mutableListOf<Int>().apply {
             digital.split(".").forEach { this.add(it.toInt()) }
         }
     } catch (e: NumberFormatException) {

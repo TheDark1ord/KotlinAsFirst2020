@@ -2,8 +2,11 @@
 
 package lesson7.task1
 
+import lesson4.task1.pow
 import org.junit.Test
+import ru.spbstu.ktuples.Tuple
 import ru.spbstu.wheels.NullableMonad.filter
+import ru.spbstu.wheels.out
 import java.io.BufferedWriter
 import java.io.File
 import java.lang.NullPointerException
@@ -11,6 +14,8 @@ import java.lang.StringBuilder
 import java.util.*
 import javax.management.RuntimeErrorException
 import kotlin.RuntimeException
+import kotlin.math.floor
+import kotlin.math.log10
 import kotlin.system.measureTimeMillis
 
 // Урок 7: работа с файлами
@@ -312,43 +317,43 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 enum class TagType { NONE, I, B, S }
 data class Tag(val pos: Int, val type: TagType)
 
+fun insertTag(tags: Stack<Tag>, text: StringBuilder, tag: Tag) {
+    val htmlTagOpen = mapOf(
+        TagType.NONE to "",
+        TagType.I to "<i>",
+        TagType.B to "<b>",
+        TagType.S to "<s>",
+    )
+    val htmlTagClose = mapOf(
+        TagType.NONE to "",
+        TagType.I to "</i>",
+        TagType.B to "</b>",
+        TagType.S to "</s>",
+    )
+
+    if (tags.peek().type == tag.type) {
+        tags.pop()
+        text.insert(tag.pos, htmlTagClose[tag.type])
+    } else {
+        tags.push(Tag(tag.pos, tag.type))
+        text.insert(tag.pos, htmlTagOpen[tag.type])
+    }
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    val text = StringBuilder(File(inputName).readText())
     val writer = File(outputName).bufferedWriter()
 
-    val text = StringBuilder(File(inputName).readText())
     val tags = Stack<Tag>()
     tags.push(Tag(0, TagType.NONE))
-
-    fun insertTag(tag: Tag) {
-        val htmlTagOpen = mapOf(
-            TagType.NONE to "",
-            TagType.I to "<i>",
-            TagType.B to "<b>",
-            TagType.S to "<s>",
-        )
-        val htmlTagClose = mapOf(
-            TagType.NONE to "",
-            TagType.I to "</i>",
-            TagType.B to "</b>",
-            TagType.S to "</s>",
-        )
-
-        if (tags.peek().type == tag.type) {
-            tags.pop()
-            text.insert(tag.pos, htmlTagClose[tag.type])
-        } else {
-            tags.push(Tag(tag.pos, tag.type))
-            text.insert(tag.pos, htmlTagOpen[tag.type])
-        }
-    }
 
     for (rawTag in Regex("(\\*{1,2})|(~~)").findAll(text)) {
         val value = rawTag.value
         text.delete(rawTag.range.first, rawTag.range.last + 1)
         when (value) {
-            "**" -> insertTag(Tag(rawTag.range.first, TagType.B))
-            "*" -> insertTag(Tag(rawTag.range.first, TagType.I))
-            "~~" -> insertTag(Tag(rawTag.range.first, TagType.S))
+            "**" -> insertTag(tags, text, Tag(rawTag.range.first, TagType.B))
+            "*" -> insertTag(tags, text, Tag(rawTag.range.first, TagType.I))
+            "~~" -> insertTag(tags, text, Tag(rawTag.range.first, TagType.S))
         }
     }
     writer.write("<html>\n")
@@ -486,21 +491,20 @@ fun closeList(writer: BufferedWriter, listStack: Stack<ListType>) {
         if (listStack.pop() == ListType.ORDERED) "</ol>" else "</ul>"
     )
     if (!listStack.empty())
-        writer.write("</li>\n")
+        writer.write("</li>")
     writer.newLine()
 }
 
 fun openList(writer: BufferedWriter, listStack: Stack<ListType>, listType: ListType) {
-    if (listType == ListType.ORDERED) {
-        listStack.push(ListType.ORDERED)
-        writer.write("<ol>\n")
-    } else {
-        listStack.push(ListType.UNORDERED)
-        writer.write("<ul>\n")
-    }
+    listStack.push(listType)
+    writer.write(
+        if (listType == ListType.ORDERED) "<ol>" else "<ul>"
+    )
+    writer.newLine()
 }
 
 fun markdownToHtmlLists(inputName: String, outputName: String) {
+    val lines = File(inputName).readLines()
     val writer = File(outputName).bufferedWriter()
     val listStack = Stack<ListType>()
 
@@ -508,8 +512,10 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
     writer.write("<body>\n")
     writer.write("<p>\n")
 
-    for (line in File(inputName).readLines()) {
+    for (line in lines) {
         if (line == "") {
+            if (!listStack.empty())
+                writer.write("</li>")
             while (!listStack.empty())
                 closeList(writer, listStack)
             writer.newLine()
@@ -541,13 +547,14 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
                 Regex("^\\s*((\\d+\\.)|(\\*))\\s").find(line)!!.range.last() + 1,
                 line.length
             )
-            writer.write("<li>$trimmedLine")
+            writer.write("<li>$trimmedLine\n")
         } else {
             writer.write(line)
             writer.newLine()
         }
     }
-    writer.write("</li>\n")
+    if (!listStack.empty())
+        writer.write("</li>\n")
     while (!listStack.empty())
         closeList(writer, listStack)
 
@@ -567,7 +574,17 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
  *
  */
 fun markdownToHtml(inputName: String, outputName: String) {
-    TODO()
+    markdownToHtmlLists(inputName, outputName)
+
+    // Clear up <html><body><p> tags
+    val lines = File(outputName).readLines()
+    val writer = File(outputName).bufferedWriter()
+    for (line in 3 until (lines.size - 3)) {
+        writer.write(lines[line] + "\n")
+    }
+    writer.close()
+
+    markdownToHtmlSimple(outputName, outputName)
 }
 
 /**
@@ -620,6 +637,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
