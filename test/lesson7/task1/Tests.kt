@@ -128,7 +128,7 @@ Basic, Ruby, Swift.
         Вывести его в выходной файл с именем outputName, выровняв по центру."""
         )
         File("temp.txt").delete()
-
+        centerFile("input/center_in2.txt", "temp.txt")
     }
 
     @Test
@@ -313,7 +313,6 @@ Basic, Ruby, Swift.
     fun markdownToHtmlLists() {
         markdownToHtmlLists("input/markdown_lists.md", "temp.html")
         checkHtmlListsExample()
-        markdownToHtmlLists("input/markdown_lists_test.md", "temp.html")
     }
 
     @Test

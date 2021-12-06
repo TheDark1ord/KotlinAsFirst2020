@@ -139,10 +139,16 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
+    val writer = File(outputName).bufferedWriter()
+
     val lines = File(inputName).readLines().map { it.trim() }.toList()
+    if (lines.isEmpty()) {
+        writer.close()
+        return
+    }
+
     val maxLen = lines.maxOf { it.length }
 
-    val writer = File(outputName).bufferedWriter()
     for (line in lines) {
         writer.write(" ".repeat((maxLen - line.length) / 2) + line + "\n")
     }
@@ -347,6 +353,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val tags = Stack<Tag>()
     tags.push(Tag(0, TagType.NONE))
 
+    for (newLine in Regex("\\\\n").findAll(text))
+        text.replace(newLine.range.first, newLine.range.last + 1, "\n")
     for (rawTag in Regex("(\\*{1,2})|(~~)").findAll(text)) {
         val value = rawTag.value
         text.delete(rawTag.range.first, rawTag.range.last + 1)
@@ -356,6 +364,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             "~~" -> insertTag(tags, text, Tag(rawTag.range.first, TagType.S))
         }
     }
+
     writer.write("<html>\n")
     writer.write("<body>\n")
     writer.write("<p>\n")
