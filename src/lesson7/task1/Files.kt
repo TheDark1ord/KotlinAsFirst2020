@@ -323,26 +323,26 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 enum class TagType { NONE, I, B, S }
 data class Tag(val pos: Int, val type: TagType)
 
-fun insertTag(tags: Stack<Tag>, text: StringBuilder, tag: Tag) {
-    val htmlTagOpen = mapOf(
-        TagType.NONE to "",
-        TagType.I to "<i>",
-        TagType.B to "<b>",
-        TagType.S to "<s>",
-    )
-    val htmlTagClose = mapOf(
-        TagType.NONE to "",
-        TagType.I to "</i>",
-        TagType.B to "</b>",
-        TagType.S to "</s>",
-    )
+val htmlTagOpen = mapOf(
+    TagType.NONE to "",
+    TagType.I to "<i>",
+    TagType.B to "<b>",
+    TagType.S to "<s>",
+)
+val htmlTagClose = mapOf(
+    TagType.NONE to "",
+    TagType.I to "</i>",
+    TagType.B to "</b>",
+    TagType.S to "</s>",
+)
 
-    if (tags.peek().type == tag.type) {
-        tags.pop()
-        text.insert(tag.pos, htmlTagClose[tag.type])
-    } else {
+fun insertTag(tags: Stack<Tag>, text: StringBuilder, tag: Tag) {
+    if (tags.empty() || tags.peek().type != tag.type) {
         tags.push(Tag(tag.pos, tag.type))
         text.insert(tag.pos, htmlTagOpen[tag.type])
+    } else {
+        tags.pop()
+        text.insert(tag.pos, htmlTagClose[tag.type])
     }
 }
 
@@ -351,10 +351,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
 
     val tags = Stack<Tag>()
-    tags.push(Tag(0, TagType.NONE))
 
+    for (tab in Regex("(?<!\\\\)\\\\t").findAll(text))
+        text.replace(tab.range.first, tab.range.last + 1, "\t")
     for (newLine in Regex("(?<!\\\\)\\\\n").findAll(text))
         text.replace(newLine.range.first, newLine.range.last + 1, "\n")
+
     for (rawTag in Regex("(\\*{1,2})|(~~)").findAll(text)) {
         val value = rawTag.value
         text.delete(rawTag.range.first, rawTag.range.last + 1)
@@ -372,7 +374,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var firstLine = true
     val lines = text.lines()
     for (line in 0 until (lines.size - 1)) {
-        if (lines[line] == "") {
+        if (lines[line].trim() == "") {
             if (lines[line + 1] != "" && !firstLine)
                 writer.write("</p>\n<p>\n")
         } else {
@@ -583,17 +585,29 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
  *
  */
 fun markdownToHtml(inputName: String, outputName: String) {
-    markdownToHtmlLists(inputName, outputName)
+    markdownToHtmlLists(inputName, "temp1.txt")
 
     // Clear up <html><body><p> tags
-    val lines = File(outputName).readLines()
-    val writer = File(outputName).bufferedWriter()
-    for (line in 3 until (lines.size - 3)) {
-        writer.write(lines[line] + "\n")
+    val writer = File("temp2.txt").bufferedWriter()
+    for (line in File("temp1.txt").readLines()) {
+        when (line) {
+            // NOP
+            "<html>" -> {}
+            "<body>" -> {}
+            "<p>" -> {}
+            "</html>" -> {}
+            "</body>" -> {}
+            "</p>" -> {}
+
+            else -> writer.write(line + "\n")
+        }
     }
     writer.close()
 
-    markdownToHtmlSimple(outputName, outputName)
+    markdownToHtmlSimple("temp2.txt", outputName)
+
+    File("temp1.txt").delete()
+    File("temp2.txt").delete()
 }
 
 /**

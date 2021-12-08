@@ -422,30 +422,30 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     val values = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
 
-    var it = 1
+    var item = 1
     for ((weight, value) in treasures.values) {
         for (w in 0..capacity) {
-            if (w >= weight && (value + values[it - 1][w - weight]) > values[it - 1][w])
-                values[it][w] = value + values[it - 1][w - weight]
-            else values[it][w] = values[it - 1][w]
+            if (w >= weight && (value + values[item - 1][w - weight]) > values[item - 1][w])
+                values[item][w] = value + values[item - 1][w - weight]
+            else values[item][w] = values[item - 1][w]
         }
-        it++
+        item++
     }
 
 
     // Get picked treasures
     val treasureList = treasures.toList()
     val pickedTreasures = mutableSetOf<String>()
-    it--
+    item--
     var w = capacity
 
-    while (it != 0 && w != 0) {
-        if (values[it][w] != values[it - 1][w]) {
+    while (item != 0 && w != 0) {
+        if (values[item][w] != values[item - 1][w]) {
             // Current treasure was picked
-            pickedTreasures.add(treasureList[it - 1].first)
-            w -= treasureList[it - 1].second.first
+            pickedTreasures.add(treasureList[item - 1].first)
+            w -= treasureList[item - 1].second.first
         }
-        it--
+        item--
     }
     return pickedTreasures
 }
