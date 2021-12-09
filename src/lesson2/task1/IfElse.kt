@@ -75,6 +75,8 @@ fun ageDescription(age: Int): String {
         "$text лет"
     } else if (shortage == 1) {
         "$text год"
+    } else if (shortage == 1) {
+        "$text год"
     } else if (shortage in 2..4) {
         "$text года"
     } else "$text лет"

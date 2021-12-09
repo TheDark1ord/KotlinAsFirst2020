@@ -89,7 +89,7 @@ fun fib(n: Int): Int {
     var b = 1
     var a = 1
     var chek = 2
-    while (chek < n ) {
+    while (chek < n) {
         d = c + b
         a = c
         c = d
@@ -97,7 +97,6 @@ fun fib(n: Int): Int {
         chek += 1
     }
     return d
-
 
 }
 
