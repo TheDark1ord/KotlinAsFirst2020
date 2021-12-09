@@ -187,7 +187,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    var namemin: String? = null
+    var namemin = ""
+
     var min = Double.MAX_VALUE
     for ((item, par) in stuff) {
         if (par.first == kind && par.second < min) {
@@ -209,7 +210,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (i in word.indices) if (chars.indexOf(word[i]) == -1) return false
-return true
+    return true
 }
 
 /**

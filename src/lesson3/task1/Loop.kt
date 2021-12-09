@@ -83,16 +83,22 @@ fun digitNumber(n: Int): Int = TODO()
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-
     if (n == 1 || n == 2) return 1
-    val fib = IntArray(n + 2)
-    fib[1] = 1
+    var d = 2
+    var c = 1
+    var b = 1
+    var a = 1
     var chek = 2
-    while (chek < n + 1) {
-        (fib[chek - 1] + fib[chek - 2]).also { fib[chek] = it }
+    while (chek < n ) {
+        d = c + b
+        a = c
+        c = d
+        b = a
         chek += 1
     }
-    return fib[chek - 1]
+    return d
+
+
 }
 
 /**
