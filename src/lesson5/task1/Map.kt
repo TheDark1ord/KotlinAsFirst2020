@@ -188,7 +188,6 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var namemin = ""
-
     var min = Double.MAX_VALUE
     for ((item, par) in stuff) {
         if (par.first == kind && par.second <= min) {
@@ -295,36 +294,35 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    var r = 0
     for (ch in list.indices) {
-        list.indices.forEach { ch1 ->
-            if (list.elementAt(ch) + list.elementAt(ch1) == number && ch != ch1) {
-                return Pair(ch, ch1)
-            }
+        r = number - list.elementAt(ch).toInt()
+        if (list.indexOf(r) != -1 && list.indexOf(r) != ch) {
+            return Pair(ch, list.indexOf(r))
+            break
         }
     }
     return Pair(-1, -1)
 }
-
-
-/**
- * Очень сложная (8 баллов)
- *
- * Входными данными является ассоциативный массив
- * "название сокровища"-"пара (вес сокровища, цена сокровища)"
- * и вместимость вашего рюкзака.
- * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,
- * которые вы можете унести в рюкзаке.
- *
- * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".
- *
- * Например:
- *   bagPacking(
- *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
- *     850
- *   ) -> setOf("Кубок")
- *   bagPacking(
- *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
- *     450
- *   ) -> emptySet()
- */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+    /**
+     * Очень сложная (8 баллов)
+     *
+     * Входными данными является ассоциативный массив
+     * "название сокровища"-"пара (вес сокровища, цена сокровища)"
+     * и вместимость вашего рюкзака.
+     * Необходимо вернуть множество сокровищ с максимальной суммарной стоимостью,
+     * которые вы можете унести в рюкзаке.
+     *
+     * Перед решением этой задачи лучше прочитать статью Википедии "Динамическое программирование".
+     *
+     * Например:
+     *   bagPacking(
+     *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+     *     850
+     *   ) -> setOf("Кубок")
+     *   bagPacking(
+     *     mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
+     *     450
+     *   ) -> emptySet()
+     */
+    fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
