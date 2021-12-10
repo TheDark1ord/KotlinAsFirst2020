@@ -272,8 +272,6 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
 }
 
 
-
-
 /**
  * Сложная (22 балла)
  *
