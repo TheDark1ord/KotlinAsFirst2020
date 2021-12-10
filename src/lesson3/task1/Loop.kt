@@ -97,7 +97,6 @@ fun fib(n: Int): Int {
         chek += 1
     }
     return d
-
 }
 
 /**

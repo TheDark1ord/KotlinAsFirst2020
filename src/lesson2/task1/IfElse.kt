@@ -71,10 +71,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     val text: String = age.toString()
     val shortage = age % 10
-    return if (age in 10..20 || age in 110..120 || shortage in 5..9 || shortage == 0) {
+    return if (age % 100 in 10..20) {
         "$text лет"
-    } else if (shortage == 1) {
-        "$text год"
     } else if (shortage == 1) {
         "$text год"
     } else if (shortage in 2..4) {
