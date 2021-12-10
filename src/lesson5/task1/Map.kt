@@ -22,14 +22,12 @@ fun shoppingListCost(
     costs: Map<String, Double>
 ): Double {
     var totalCost = 0.0
-
     for (item in shoppingList) {
         val itemCost = costs[item]
         if (itemCost != null) {
             totalCost += itemCost
         }
     }
-
     return totalCost
 }
 
@@ -294,12 +292,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var r = 0
+    var r: Int
     for (ch in list.indices) {
         r = number - list.elementAt(ch).toInt()
         if (list.indexOf(r) != -1 && list.indexOf(r) != ch) {
             return Pair(ch, list.indexOf(r))
-            break
         }
     }
     return Pair(-1, -1)
