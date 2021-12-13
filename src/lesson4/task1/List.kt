@@ -203,7 +203,21 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    var a = n
+    var b = 2
+    val str = StringBuilder()
+    while (a != 1) {
+        while (a % b == 0) {
+            str.append(b.toString())
+            str.append("*")
+            a /= b
+        }
+        b++
+    }
+    return str.toString().dropLast(1)
+
+}
 
 /**
  * Средняя (3 балла)
@@ -327,6 +341,7 @@ fun russian(n: Int): String {
         "восемьсот ",
         "девятьсот "
     )
+
 
     if (k / 100000 != 0) {
         str += hundreds[k / 100000 - 1] + "тысяч "
