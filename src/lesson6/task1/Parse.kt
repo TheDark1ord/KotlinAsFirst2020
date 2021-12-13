@@ -205,7 +205,6 @@ fun firstDuplicateIndex(str: String): Int {
                 return k
             }
             k += parts[part].length + 1
-            println(k)
         }
     } catch (e: IndexOutOfBoundsException) {
         return -1
