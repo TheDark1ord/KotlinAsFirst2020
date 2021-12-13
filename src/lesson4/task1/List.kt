@@ -216,7 +216,6 @@ fun factorizeToString(n: Int): String {
         b++
     }
     return str.toString().dropLast(1)
-
 }
 
 /**
