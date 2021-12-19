@@ -147,18 +147,17 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    return try {
-        val parts = jumps.split(" ")
-        var max = -1
-        for (part in parts) {
-            if (part != "%" && part != "-") {
-                if (part.toInt() > max) max = part.toInt()
-            }
-        }
-        max
-    } catch (e: NumberFormatException) {
-        -1
+    if (!jumps.matches(Regex("""((\s)?\d+|(\s)?[%-]\s[%-]\s\d+|(\s)?[%-]\s\d+)+"""))) {
+        return -1
     }
+    val parts = jumps.split(" ")
+    var max = -1
+    for (part in parts) {
+        if (part != "%" && part != "-") {
+            if (part.toInt() > max) max = part.toInt()
+        }
+    }
+    return max
 }
 
 /**
@@ -212,18 +211,16 @@ fun plusMinus(expression: String): Int {
 fun firstDuplicateIndex(str: String): Int {
     val parts = str.split(" ")
     var k = 0
-    try {
-        for (part in parts.indices) {
-            if (parts[part].equals(parts[part + 1], ignoreCase = true)) {
-                return k
-            }
-            k += parts[part].length + 1
+    if (parts.size == 1) return -1
+    for (part in parts.indices) {
+        if (parts[part].equals(parts[part + 1], ignoreCase = true)) {
+            return k
         }
-    } catch (e: IndexOutOfBoundsException) {
-        return -1
+        k += parts[part].length + 1
     }
     return -1
 }
+
 
 
 /**

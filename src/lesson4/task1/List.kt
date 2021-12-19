@@ -294,7 +294,7 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    var str = ""
+    val str = StringBuilder()
     var k = n
     val units = listOf(
         "один ",
@@ -343,44 +343,45 @@ fun russian(n: Int): String {
 
 
     if (k / 100000 != 0) {
-        str += hundreds[k / 100000 - 1] + "тысяч "
+        str.append(hundreds[k / 100000 - 1] + "тысяч ")
         k %= 100000
     }
     if (k / 1000 in 11..19) {
-        str = str.dropLast(6)
-        str += tenplus[k / 1000 % 10 - 1] + "тысяч "
+        if (str.isNotEmpty()) str.delete(str.length - 7, str.length - 1)
+        str.append(tenplus[k / 1000 % 10 - 1] + "тысяч ")
         k %= 1000
     } else {
         if (k / 10000 != 0) {
-            str = str.dropLast(6)
-            str += dozens[(k / 10000 - 1)] + "тысяч "
+            if (str.isNotEmpty()) str.delete(str.length - 7, str.length - 1)
+            str.append(dozens[(k / 10000 - 1)] + "тысяч ")
             k %= 10000
         }
         if (k / 1000 != 0) {
-            str = str.dropLast(6)
-            if (k / 1000 == 1) str += "одна тысяча "
-            if (k / 1000 == 2) str += "две тысячи "
-            if (k / 1000 in 3..4) str += units[(k / 1000 - 1)] + "тысячи "
-            if (k / 1000 > 4) str += units[(k / 1000 - 1)] + "тысяч "
+            if (str.isNotEmpty()) str.delete(str.length - 7, str.length - 1)
+            if (k / 1000 == 1) str.append("одна тысяча ")
+            if (k / 1000 == 2) str.append("две тысячи ")
+            if (k / 1000 in 3..4) str.append(units[(k / 1000 - 1)] + "тысячи ")
+            if (k / 1000 > 4) str.append(units[(k / 1000 - 1)] + "тысяч ")
             k %= 1000
         }
     }
+
     if (k / 100 != 0) {
-        str += hundreds[(k / 100 - 1)]
+        str.append(hundreds[(k / 100 - 1)])
         k %= 100
     }
     if (k in 10..19) {
-        str += if (k == 10) "десять " else
-            tenplus[(k - 11)]
+        if (k == 10) str.append("десять ") else
+            str.append(tenplus[(k - 11)])
     } else {
         if (k / 10 != 0) {
-            str += dozens[(k / 10 - 1)]
+            str.append(dozens[(k / 10 - 1)])
             k %= 10
         }
         if (k != 0) {
-            str += units[(k - 1)]
+            str.append(units[(k - 1)])
         }
     }
 
-    return str.dropLast(1)
+    return str.toString().dropLast(1)
 }
