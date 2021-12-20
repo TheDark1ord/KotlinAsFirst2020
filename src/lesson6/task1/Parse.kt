@@ -212,7 +212,6 @@ fun firstDuplicateIndex(str: String): Int {
     val parts = str.split(" ")
     var k = 0
     if (parts.size == 1) return -1
-
     for (part in parts.indices) {
         if (part + 1 >= parts.size) return -1
         if (parts[part].equals(parts[part + 1], ignoreCase = true)) {
@@ -220,7 +219,6 @@ fun firstDuplicateIndex(str: String): Int {
         }
         k += parts[part].length + 1
     }
-
     return -1
 }
 
