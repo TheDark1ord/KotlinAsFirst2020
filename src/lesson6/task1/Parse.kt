@@ -212,15 +212,18 @@ fun firstDuplicateIndex(str: String): Int {
     val parts = str.split(" ")
     var k = 0
     if (parts.size == 1) return -1
-    for (part in parts.indices) {
-        if (parts[part].equals(parts[part + 1], ignoreCase = true)) {
-            return k
+    try {
+        for (part in parts.indices) {
+            if (parts[part].equals(parts[part + 1], ignoreCase = true)) {
+                return k
+            }
+            k += parts[part].length + 1
         }
-        k += parts[part].length + 1
+    } catch (e: IndexOutOfBoundsException) {
+        return -1
     }
     return -1
 }
-
 
 
 /**
