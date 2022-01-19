@@ -16,6 +16,13 @@ class Tests {
 
     @Test
     @Tag("Example")
+    fun myFun2() {
+        assertEquals(42, lesson6.task1.myFun2("input/demo2.txt", "Апрель 9..15"))
+        assertEquals(48, lesson6.task1.myFun2("input/demo2.txt", "Март 22..Май 8"))
+    }
+
+    @Test
+    @Tag("Example")
     fun twoDigitStr() {
         assertEquals("00", twoDigitStr(0))
         assertEquals("09", twoDigitStr(9))

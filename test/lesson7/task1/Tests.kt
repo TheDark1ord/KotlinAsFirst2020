@@ -1,5 +1,7 @@
 package lesson7.task1
 
+import lesson4.task1.factorize
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -11,6 +13,15 @@ class Tests {
         val file = File(name)
         val content = file.readLines().joinToString("\n")
         assertEquals(expectedContent, content)
+    }
+
+    @Test
+    @Tag("20")
+    fun myFun() {
+
+        assertEquals(2.9, myFun("input/demo.txt", "A2-C3"))
+        assertEquals(2.9, myFun("input/demo.txt", "C3-A2"))
+
     }
 
     @Test
@@ -202,6 +213,8 @@ Basic, Ruby, Swift.
             ), top20Words("input/onegin.txt")
         )
     }
+
+
 
     @Test
     @Tag("14")
