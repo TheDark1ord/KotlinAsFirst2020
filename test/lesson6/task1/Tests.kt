@@ -17,8 +17,16 @@ class Tests {
     @Test
     @Tag("Example")
     fun myFun2() {
-        assertEquals(42, lesson6.task1.myFun2("input/demo2.txt", "Апрель 9..15"))
-        assertEquals(48, lesson6.task1.myFun2("input/demo2.txt", "Март 22..Май 8"))
+        assertEquals(42, lesson6.task1.myFun2("input/demo 2.txt", "Апрель 9..15"))
+        assertEquals(48, lesson6.task1.myFun2("input/demo 2.txt", "Март 22..Май 8"))
+    }
+
+    @Test
+    @Tag("Example")
+    fun foo() {
+        assertEquals("Пионерская 9-17", lesson6.task1.foo("input/demo 3.txt", "комната 12"))
+        assertEquals("Школьная 12-14", lesson6.task1.foo("input/demo 3.txt", "комната 19"))
+        assertEquals("Пионерская 9-17", lesson6.task1.foo("input/demo 3.txt", "кухня 8; комната 15"))
     }
 
     @Test

@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import java.io.File
-import java.lang.StringBuilder
 
 
 // Урок 6: разбор строк, исключения
@@ -65,29 +64,200 @@ import java.lang.StringBuilder
 fun myFun2(inputName: String, days: String): Any {
 
     val count = days.split(" ")
-    val month1 = count[0]
-    val day = count[1].split("..")
-    val d1 = day[0].toInt()
-    val d2 = day[1].toInt()
-    var max = 0
-    for (line in File(inputName).readLines()) {
-    var m = line.split(" ")
-        if (m[0] == month1) {
-            var i = 0
-            for (count in line.split(", ")) {
-                if (i in d1..d2) {
-                    if (count.toInt() > max) max = count.toInt()
+    if (count.size < 3) {
+
+        val month1 = count[0]
+        val day = count[1].split("..")
+        val d1 = day[0].toInt()
+        val d2 = day[1].toInt()
+
+        println(d1)
+        println(d2)
+
+        var max = 0
+        var i = 0
+        for (line in File(inputName).readLines()) {
+            i = 0
+            var m = line.split(" ")
+            //  println(m[0])
+            if (m[0] == month1) {
+
+                for (count in line.split(" ")) {
+
+                    if (i in d1..d2) {
+                        println(count)
+
+                        if (count.toInt() > max) max = count.toInt()
+                    }
+                    i += 1
                 }
-                i += 1
             }
+
         }
+
+
+
+        return max
+    } else {
+        val month1 = count[0]
+        //Март 22..Май 8
+        val day = count[1].split("..")
+        val d1 = day[0].toInt()
+        val month2 = day[1]
+        val d2 = count[2].toInt()
+        println(month1)
+        println(month2)
+        println(d1)
+        println(d2)
+
+        var max = 0
+        var i = 0
+        var s = false
+        for (line in File(inputName).readLines()) {
+            i = 0
+            var m = line.split(" ")
+            //  println(m[0])
+
+
+            if (m[0] == month1) s = true
+            if (m[0] == month2) {
+
+                for (count in line.split(" ")) {
+
+                    if (i in 1..d2) {
+                        //    println(count)
+
+                        if (count.toInt() > max) max = count.toInt()
+                    }
+                    i += 1
+                }
+                return max
+            }
+
+
+            if (s) {
+
+                for (count in line.split(" ")) {
+
+                    if (m[0] == month1 && i >= d1 || m[0] != month1 && i >= 1) {
+                        //    println(count)
+
+                        if (count.toInt() > max) max = count.toInt()
+                    }
+                    i += 1
+                }
+            }
+
+        }
+
+
     }
 
-
-
-    return max
+    return 0
 
 }
+
+/**
+ * В файле с именем inputName заданы описания квартир,
+ * предлагающихся для продажи, в следующем формате:
+ *
+ * Пионерская 9-17: комната 18, комната 14, кухня 7, коридор 4
+ * Школьная 12-14: комната 19, кухня 8, коридор 3
+ * Садовая 19-1-55: комната 12, комната 19, кухня 9, коридор 5
+ * Железнодорожная 3-6: комната 21, кухня 6, коридор 4
+ *
+ * Строчка начинается с адреса квартиры, после двоеточия
+ * перечисляются помещения квартиры через запятую, с указанием
+ * их площади.
+ *
+ * Параметр query содержит запрос, начинающийся с названия
+ * помещения, за которым следует его минимальная площадь,
+ * например, “кухня 8”. Через точку с запятой могут следовать
+ * другие ограничения, например “кухня 8; коридор 4”
+ * Функция должна найти все квартиры в списке,
+ * удовлетворяющие запросу (площадь кухни больше или равна 8,
+ * площадь коридора больше или равна 4)
+ *
+ * “Удовлетворительно” -- в запросе может присутствовать только
+ * одно помещение, например, “кухня 8”
+ *
+ * “Хорошо” -- в запросе может присутствовать несколько помещений,
+ * например, “кухня 8; комната 15”
+ *
+ * “Отлично” -- в запросе может присутствовать два и более
+ * однотипных помещения, например, “комната 19; комната 12” --
+ * двухкомнатная квартира,
+ * одна комната не менее 19, другая не менее 12
+ *
+ * При нарушении форматов входных данных следует выбрасывать
+ * исключение IllegalArgumentException, при невозможности
+ * прочитать файл выбрасывать исключение IOException.
+ *
+ * Предложить имя и тип результата функции. Кроме функции
+ * следует написать тесты, подтверждающие её работоспособность.
+ */
+fun foo(inputName: String, query: String): Any {
+    try {
+        val part = query.split(" ")
+
+        if (part.size < 3) {
+
+            val n = part[1].toInt()
+            val p = part[0]
+            var c: String
+            var t = false
+            for (line in File(inputName).readLines()) {
+                for (count in line.split(" ")) {
+                    if (t) {
+                        if (count.toString().dropLast(1).toInt() >= n) {
+                            val res = line.split(": ")
+                            return res[0]
+                        } else t = false
+                    }
+                    if (count == p) t = true
+                }
+            }
+        } else {
+
+            val prt = query.split("; ")
+            val counts = mutableMapOf<String, Int>()
+
+
+            for (i in prt) {
+                val c = i.split(" ")
+                counts.put(c[0], c[1].toInt())
+            }
+
+            var t = false
+            var s = " "
+            for (line in File(inputName).readLines()) {
+
+
+                for (count in line.split(" ")) {
+                    if (t) {
+                        if (count.toString().dropLast(1).toInt() >= counts[s]!!) {
+                            val res = line.split(": ")
+                            return res[0]
+                        } else t = false
+                    }
+                    if (counts.containsKey(count)) {
+                        t = true
+                        s = count
+                    }
+
+
+                }
+            }
+
+        }
+
+        return 0
+    } catch (e: NumberFormatException) {
+        null
+    }
+    return 0
+}
+
 
 fun timeStrToSeconds(str: String): Int {
     val parts = str.split(":")
@@ -174,7 +344,12 @@ fun dateStrToDigit(str: String): String {
             || (parts[1] == "февраля" && parts[0].toInt() in 1..28 && !leap)
             || (parts[1] == "февраля" && parts[0].toInt() in 1..29 && leap)
         )
-            return String.format("%02d.%02d.%01d", parts[0].toInt(), month[parts[1]]?.first?.toInt(), parts[2].toInt())
+            return String.format(
+                "%02d.%02d.%01d",
+                parts[0].toInt(),
+                month[parts[1]]?.first?.toInt(),
+                parts[2].toInt()
+            )
         else ""
     } catch (e: IndexOutOfBoundsException) {
         ""
@@ -271,7 +446,6 @@ fun plusMinus(expression: String): Int {
     }
     return res
 }
-
 
 
 /**
