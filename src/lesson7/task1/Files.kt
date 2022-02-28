@@ -67,6 +67,143 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
     writer.close()
 }
 
+
+/**
+ * В файле с именем inputName задана таблица действительных чисел.
+ * Столбцы таблицы разделены запятыми и пробелами.
+ * Каждая строка содержит не более 26 значений. Пример:
+ *
+ * 1.5, 2.67, 3.0, 1.4
+ * 5.2, 7.1, -4.8, 0.0
+ * 1.4, 6.0, 2.5, -1.9  *
+ * В строковом параметре range  задан диапазон из двух ячеек
+ * этой таблицы, разделённых чёрточкой, например “A2-C4” или
+ * “A31-B42”
+ * Ячейки закодированы так: столбец задаётся заглавной буквой
+ * латинского алфавита (первый столбец это буква А),
+ * а строка - целым числом (первая строка это число 1).
+ *
+ * Необходимо посчитать среднее арифметическое значений во всех
+ * ячейках заданного диапазона заданной таблицы. Диапазон задаёт
+ * углы прямоугольника -- например “А2-С3” соответствует
+ * ячейкам A2, A3, B2, B3, C2, C3
+ *
+ * “Удовлетворительно” -- все строки содержат одинаковое
+ * количество чисел, заданный диапазон относится к одной строке,
+ * первая ячейка в нём обязательно находится слева,
+ * например, “B3-D3” (содержит B3, C3, D3)
+ *
+ * “Хорошо” -- диапазоны могут содержать ячейки из разных строк
+ * с произвольным положением углов, например, “B1-A2”
+ * соответствует ячейкам A1, A2, B1, B2
+ *
+ * “Отлично” -- строки могут содержать разное количество
+ * чисел. Кроме того, диапазон может включать ячейки за пределами
+ * входной таблицы, это не является ошибкой,
+ * ячейки за пределами таблицы просто не учитываются.
+ * Пример: диапазон “E1-B2” содержит B1, C1, D1, B2, C2, D2
+ *
+ * При нарушении форматов входных данных следует выбрасывать
+ * исключение IllegalArgumentException. При невозможности
+ * прочитать файл выбрасывать исключение IOException.
+ *
+ * Предложить самостоятельно имя функции. Кроме функции следует
+ * написать тесты, подтверждающие её работоспособность.
+ */
+
+fun myFun(inputName: String, range: String): Double {
+
+
+    try {
+
+
+        //  if (!range.matches(Regex("""[A-Z]\d-[A-Z]\d"""))) {
+        //    return -1.toDouble()
+        //}
+        val counts = arrayOf(
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z"
+        )
+
+        var l1: Int
+        var l2: Int
+
+        var s1: Int
+        var s2: Int
+
+
+
+        s2 = max(counts.indexOf(range[0].toString()), counts.indexOf(range[3].toString()))
+        s1 = min(counts.indexOf(range[0].toString()), counts.indexOf(range[3].toString()))
+        l2 = max(range[1].digitToInt(), range[4].digitToInt())
+        l1 = min(range[1].digitToInt(), range[4].digitToInt())
+
+        println(l1)
+        println(l2)
+
+        println(s1)
+        println(s2)
+
+        var l = 1
+        var c = 0
+        var sum = 0.0
+        var size = 0
+        for (line in File(inputName).readLines()) {
+
+            //  println(line)
+            c = 0
+            if (l in l1..l2) {
+
+                for (count in line.split(", ")) {
+                    //  println(count)
+
+                    if (c in s1..s2) {
+
+                        println(count)
+                        sum += count.toDouble()
+                        size += 1
+                    }
+                    //    println(count)
+                    c += 1
+                }
+            }
+
+            l += 1
+        }
+        return sum / size.toDouble()
+
+    } catch (e: IllegalArgumentException) {
+        null
+    }
+    return 0.0
+
+}
+
+
 /**
  * Простая (8 баллов)
  *
@@ -77,7 +214,14 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        if (!line.startsWith("_")) {
+            writer.write(line)
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -89,7 +233,20 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    val map = mutableMapOf<String, Int>()
+    val text = File(inputName).readText()
+    for (substring in substrings) {
+        var count = 0
+        for (i in text.indices) {
+            if (text.length > i + substring.length - 1 &&
+                text.substring(i, i + substring.length).lowercase() == substring.lowercase()
+            ) count++
+        }
+        map[substring] = count
+    }
+    return map
+}
 
 
 /**
@@ -272,8 +429,24 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+
+    var max = 0
+    val writer = File(outputName).bufferedWriter()
+    val words = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        if (line.lowercase().toList().toSet().size == line.length) {
+            if (line.length == max) words.add(line)
+            else if (line.length > max) {
+                words.clear()
+                max = line.length
+                words.add(line)
+            }
+        }
+    }
+    writer.write(words.joinToString())
+    writer.close()
 }
+
 
 /**
  * Сложная (22 балла)
@@ -426,65 +599,65 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <p>
-      <ul>
-        <li>
-          Утка по-пекински
-          <ul>
-            <li>Утка</li>
-            <li>Соус</li>
-          </ul>
-        </li>
-        <li>
-          Салат Оливье
-          <ol>
-            <li>Мясо
-              <ul>
-                <li>Или колбаса</li>
-              </ul>
-            </li>
-            <li>Майонез</li>
-            <li>Картофель</li>
-            <li>Что-то там ещё</li>
-          </ol>
-        </li>
-        <li>Помидоры</li>
-        <li>Фрукты
-          <ol>
-            <li>Бананы</li>
-            <li>Яблоки
-              <ol>
-                <li>Красные</li>
-                <li>Зелёные</li>
-              </ol>
-            </li>
-          </ol>
-        </li>
-      </ul>
-    </p>
-  </body>
+<body>
+<p>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>Или колбаса</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>Фрукты
+<ol>
+<li>Бананы</li>
+<li>Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</p>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -616,23 +789,23 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+19935
+ *    111
 --------
-   19935
+19935
 + 19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
@@ -646,16 +819,16 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
+19935 | 22
+-198     906
+----
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
@@ -664,4 +837,5 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
+
 

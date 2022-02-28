@@ -131,7 +131,16 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int = TODO()
+): Int {
+    var c = 0
+    if (kingX == rookX1 || kingY == rookY1) {
+        c += 1
+    }
+    if (kingX == rookX2 || kingY == rookY2) {
+        c += 2
+    }
+    return c
+}
 
 /**
  * Простая (2 балла)
